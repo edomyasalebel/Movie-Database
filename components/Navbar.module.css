@@ -1,0 +1,9 @@
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: rgba(17,16,16,0.90); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--cream); cursor: pointer; }
+.logo em { font-style: italic; color: var(--gold); }
+.navRight { display: flex; align-items: center; gap: 10px; }
+.navLink { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--font-body); padding: 6px 4px; transition: color 0.2s; }
+.navLink:hover { color: var(--cream); }
+.navLinkMuted { font-size: 13px; color: var(--muted2); background: none; border: none; cursor: pointer; font-family: var(--font-body); padding: 6px 4px; }
+.navLinkMuted:hover { color: var(--cream); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1.5px solid var(--gold); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
