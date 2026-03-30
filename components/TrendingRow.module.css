@@ -2,5 +2,5 @@
 .label h2 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--cream); }
 .label h2 span { font-size: 14px; color: var(--muted); font-weight: 300; margin-left: 4px; }
 .bar { width: 3px; height: 18px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
-.row { display: flex; gap: 14px; padding: 0 40px 32px; overflow-x: auto; scrollbar-width: none; }
+.row { display: flex; gap: 14px; padding: 10 40px 32px; overflow-x: auto; scrollbar-width: none; }
 .row::-webkit-scrollbar { display: none; }

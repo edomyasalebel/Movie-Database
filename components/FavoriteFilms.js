@@ -1,5 +1,6 @@
 'use client';
 import { favoriteMovies } from '../data/movies';
+import PosterCard from '../components/PosterCard';
 import styles from './FavoriteFilms.module.css';
 
 export default function FavoriteFilms() {
@@ -8,10 +9,7 @@ export default function FavoriteFilms() {
       <h3 className={styles.title}>Favorite Films</h3>
       <div className={styles.row}>
         {favoriteMovies.map((movie) => (
-          <div key={movie.id} className={styles.card} style={{ background: movie.bg }}>
-            <span className={styles.emoji}>{movie.emoji}</span>
-            <div className={styles.label}>{movie.title}</div>
-          </div>
+          <PosterCard key={movie.id} movie={movie} />
         ))}
       </div>
     </div>
