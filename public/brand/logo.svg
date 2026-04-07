@@ -1,0 +1,24 @@
+<svg width="320" height="64" viewBox="0 0 320 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;display=swap');
+      .movie {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 52px;
+        font-weight: 300;
+        fill: #f2ede8;
+        letter-spacing: -1px;
+      }
+      .diary {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 52px;
+        font-weight: 300;
+        font-style: italic;
+        fill: #00d0ff;
+        letter-spacing: -1px;
+      }
+    </style>
+  </defs>
+  <text x="0" y="52" class="movie">Movie</text>
+  <text x="163" y="52" class="diary">Diary</text>
+</svg>

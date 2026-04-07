@@ -1,0 +1,73 @@
+<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&amp;display=swap');
+      .monogram {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 22px;
+        font-style: italic;
+        font-weight: 300;
+        fill: #00d0ff;
+        text-anchor: middle;
+        dominant-baseline: central;
+      }
+    </style>
+  </defs>
+
+  <!-- Outer spinning ring (dashed like film sprockets) -->
+  <circle
+    cx="40" cy="40" r="34"
+    fill="none"
+    stroke="#00d0ff"
+    stroke-width="1.5"
+    stroke-dasharray="6 4"
+    opacity="0.6"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 40 40"
+      to="360 40 40"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Inner spinning ring (opposite direction, slower) -->
+  <circle
+    cx="40" cy="40" r="26"
+    fill="none"
+    stroke="#00d0ff"
+    stroke-width="1"
+    stroke-dasharray="3 6"
+    opacity="0.3"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="360 40 40"
+      to="0 40 40"
+      dur="4s"
+      repeatCount="indefinite"
+    />
+  </circle>
+
+  <!-- Center fill -->
+  <circle cx="40" cy="40" r="18" fill="#111010" />
+
+  <!-- MD monogram -->
+  <text x="40" y="41" class="monogram">MD</text>
+
+  <!-- Pulsing dot at top of outer ring -->
+  <circle cx="40" cy="6" r="2.5" fill="#00d0ff">
+    <animate attributeName="opacity" values="1;0.2;1" dur="3s" repeatCount="indefinite" />
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 40 40"
+      to="360 40 40"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>

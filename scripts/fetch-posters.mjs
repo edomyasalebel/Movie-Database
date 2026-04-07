@@ -8,22 +8,16 @@ if (!API_KEY) {
   process.exit(1);
 }
 
+// only the movies that currently have null poster_url in the DB
 const movies = [
-  { title: 'Dune: Part Two',                    year: 2024 },
-  { title: 'Severance',                          year: 2022 },
-  { title: 'Jujutsu Kaisen',                     year: 2020 },
-  { title: 'Sinners',                            year: 2025 },
-  { title: 'A Real Pain',                        year: 2024 },
-  { title: 'Mickey 17',                          year: 2025 },
-  { title: 'Conclave',                           year: 2024 },
-  { title: 'The Brutalist',                      year: 2024 },
-  { title: 'Parasite',                           year: 2019 },
-  { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
-  { title: 'Interstellar',                       year: 2014 },
-  { title: 'No Country for Old Men',             year: 2007 },
-  { title: 'Yi Yi',                              year: 2000 },
-  { title: 'In the Mood for Love',               year: 2000 },
-  { title: 'Shoplifters',                        year: 2018 },
+  { title: 'Oldboy',                year: 2003 },
+  { title: 'The Handmaiden',        year: 2016 },
+  { title: 'Burning',               year: 2018 },
+  { title: 'Chungking Express',     year: 1994 },
+  { title: 'Spirited Away',         year: 2002 },
+  { title: 'Memories of Murder',    year: 2003 },
+  { title: 'Drive My Car',          year: 2021 },
+  { title: 'Raise the Red Lantern', year: 1991 },
 ];
 
 const BASE_IMG = 'https://image.tmdb.org/t/p/w342';

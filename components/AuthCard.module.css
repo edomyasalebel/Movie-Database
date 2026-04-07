@@ -12,3 +12,9 @@
 .btnFull:hover { opacity: 0.88; }
 .note { font-size: 12px; color: var(--muted2); text-align: center; margin-top: 16px; }
 .note span { color: var(--gold); cursor: pointer; }
+
+/* error message shown when login or signup fails */
+.error { font-size: 13px; color: #e05c5c; margin-bottom: 10px; text-align: center; }
+
+/* disabled state while loading */
+.btnFull:disabled { opacity: 0.5; cursor: not-allowed; }

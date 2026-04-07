@@ -1,0 +1,13 @@
+/* centers the spinner in the middle of the page */
+.wrapper {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* size of the spinner */
+.spinner {
+  width: 80px;
+  height: 80px;
+}

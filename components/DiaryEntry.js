@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import styles from './DiaryEntry.module.css';
 
+
+
 export default function DiaryEntry({ entry }) {
   return (
     <Link href={`/diary/${entry.id}`}>
@@ -10,12 +12,7 @@ export default function DiaryEntry({ entry }) {
           <div className={styles.day}>{entry.day}</div>
           <div className={styles.month}>{entry.month}</div>
         </div>
-        <div className={styles.thumb}>
-          {entry.poster_url
-            ? <img src={entry.poster_url} alt={entry.title} className={styles.thumbImage} />
-            : entry.emoji
-          }
-        </div>
+        <div className={styles.thumb}>{entry.emoji}</div>
         <div className={styles.info}>
           <div className={styles.entryTitle}>{entry.title}</div>
           <div className={styles.sub}>{entry.year}</div>

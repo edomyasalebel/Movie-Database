@@ -1,23 +1,58 @@
 'use client';
-import { useState } from 'react';
-import { trendingMovies, topRatedMovies } from '../../data/movies';
+import { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
 import Navbar from '../../components/Navbar';
 import PosterCard from '../../components/PosterCard';
+import LoadingSpinner from '../../components/LoadingSpinner'; // reusable spinner
 import styles from './page.module.css';
-
-const allMovies = [...trendingMovies, ...topRatedMovies];
 
 const genres = ['All', 'Sci-Fi', 'Drama', 'Thriller', 'Romance', 'Crime', 'Family'];
 
 export default function BrowsePage() {
+  const [allMovies, setAllMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [activeGenre, setActiveGenre] = useState('All');
 
-  // filter allMovies by query and activeGenre, store result in a variable
+  useEffect(() => {
+    async function fetchMovies() {
+      // fetch movies AND their genres at the same time using Supabase joins
+      // movie_genres is the junction table, genres is the genres table
+      // this gives each movie an array of its genres nested inside
+      const { data } = await supabase
+        .from('movies')
+        .select('*, movie_genres(genres(name))');
+
+      setAllMovies(data || []);
+      setLoading(false);
+    }
+    fetchMovies();
+  }, []);
+
   const filtered = allMovies.filter((movie) => {
-  const matchesQuery = movie.title.toLowerCase().includes(query.toLowerCase());
-  const matchesGenre = activeGenre === 'All' || movie.genre?.includes(activeGenre);
-  return matchesQuery && matchesGenre; });
+    // check if movie title contains the search query (case insensitive)
+    const matchesQuery = movie.title.toLowerCase().includes(query.toLowerCase());
+
+    // if 'All' is selected, skip genre filter
+    // otherwise check if any of the movie's genres match the active genre
+    // movie.movie_genres is an array like: [{ genres: { name: 'Drama' } }, ...]
+    const matchesGenre = activeGenre === 'All' ||
+      movie.movie_genres?.some((mg) => mg.genres?.name === activeGenre);
+
+    return matchesQuery && matchesGenre;
+  });
+
+  // show spinner while movies are loading from Supabase
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <main className={styles.container}>
+          <LoadingSpinner />
+        </main>
+      </>
+    );
+  }
 
   return (
     <>

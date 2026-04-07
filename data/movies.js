@@ -1,3 +1,29 @@
+export const watchlistMovies = [
+  { id: 4,  emoji: '🔺', title: 'Sinners',           year: 2025, stars: '★★★★½', duration: 130, country: 'USA',       description: 'Two ex-convicts attempt to leave their criminal past behind.', poster_url: 'https://image.tmdb.org/t/p/w342/705nQHqe4JGdEisrQmVYmXyjs1U.jpg' },
+  { id: 6,  emoji: '🤖', title: 'Mickey 17',          year: 2025, stars: '★★★★☆', duration: 139, country: 'USA',       description: 'A disposable employee is repeatedly cloned to survive deadly missions.', poster_url: 'https://image.tmdb.org/t/p/w342/edKpE9B5qN3e559OuMCLZdW1iBZ.jpg' },
+  { id: 16, emoji: '🌿', title: 'Yi Yi',              year: 2000, stars: '★★★★★', duration: 173, country: 'Taiwan',    description: 'A Taiwanese family faces personal crises over the course of a year.', poster_url: 'https://image.tmdb.org/t/p/w342/mR8dSQZI8X6Z1NClJhFrtJp636z.jpg' },
+  { id: 18, emoji: '🏠', title: 'Shoplifters',        year: 2018, stars: '★★★★½', duration: 121, country: 'Japan',     description: 'A destitute family in Tokyo survives by shoplifting.', poster_url: 'https://image.tmdb.org/t/p/w342/4nfRUOv3LX5zLn98WS1WqVBk9E9.jpg' },
+  { id: 5,  emoji: '🌿', title: 'A Real Pain',        year: 2024, stars: '★★★★☆', duration: 107, country: 'USA',       description: 'Two estranged cousins reconnect on a trip to Poland.', poster_url: 'https://image.tmdb.org/t/p/w342/67xRIXm5TxXRT4nV2V4AEJ9yq2d.jpg' },
+  { id: 17, emoji: '🌸', title: 'In the Mood for Love', year: 2000, stars: '★★★★★', duration: 98, country: 'Hong Kong', description: 'Two neighbors slowly fall in love in 1960s Hong Kong.', poster_url: 'https://image.tmdb.org/t/p/w342/iYypPT4bhqXfq1b6EnmxvRt6b2Y.jpg' },
+  { id: 15, emoji: '🔺', title: 'No Country for Old Men', year: 2007, stars: '★★★★★', duration: 122, country: 'USA',   description: 'A hunter is pursued by a relentless killer across Texas.', poster_url: 'https://image.tmdb.org/t/p/w342/6d5XOczc226jECq0LIX0siKtgHR.jpg' },
+  { id: 2,  emoji: '🕵️', title: 'Severance S2',      year: 2025, stars: '★★★★½', duration: 60,  country: 'USA',       description: 'A mysterious corporation separates work and personal memories.', poster_url: 'https://image.tmdb.org/t/p/w342/AnI5jipbxwJg942QWy1KIeecMll.jpg' },
+];
+
+export const userReviews = [
+  { id: 1, movieId: 1,  title: 'Dune: Part Two',       year: 2024, stars: '★★★★★', poster_url: 'https://image.tmdb.org/t/p/w342/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', date: 'Mar 28, 2025', review: 'Visually stunning and narratively gripping. Villeneuve crafted a masterpiece. The scale, the sound design, the performances — all perfect.' },
+  { id: 2, movieId: 7,  title: 'Conclave',              year: 2024, stars: '★★★★½', poster_url: 'https://image.tmdb.org/t/p/w342/vYEyxF1UT779RiEalpMjUT6kfdf.jpg', date: 'Mar 24, 2025', review: 'Smart political thriller with excellent pacing. Ralph Fiennes delivers a nuanced performance. The third act twist is satisfying.' },
+  { id: 3, movieId: 8,  title: 'The Brutalist',         year: 2024, stars: '★★★★★', poster_url: 'https://image.tmdb.org/t/p/w342/vP7Yd6couiAaw9jgMd5cjMRj3hQ.jpg', date: 'Mar 12, 2025', review: 'Epic in every sense. The runtime allows the narrative to breathe. Performances are haunting. Brady Corbet is a genius filmmaker.' },
+  { id: 4, movieId: 17, title: 'In the Mood for Love',  year: 2000, stars: '★★★★★', poster_url: 'https://image.tmdb.org/t/p/w342/iYypPT4bhqXfq1b6EnmxvRt6b2Y.jpg', date: 'Mar 17, 2025', review: 'Cinematography is poetry. Wong Kar-wai\'s direction is impeccable. The restrained emotions hit harder than any dramatic outburst.' },
+  { id: 5, movieId: 12, title: 'Parasite',              year: 2019, stars: '★★★★★', poster_url: 'https://image.tmdb.org/t/p/w342/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg', date: 'Feb 5,  2025', review: 'Bong Joon-ho is a master of genre-blending. Every scene is meticulously crafted. The ending is unforgettable.' },
+  { id: 6, movieId: 14, title: 'Interstellar',          year: 2014, stars: '★★★★½', poster_url: 'https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg', date: 'Jan 20, 2025', review: 'Nolan at his most ambitious. The docking scene is one of the best sequences ever put to film. Hans Zimmer\'s score is transcendent.' },
+];
+
+export const userLists = [
+  { id: 1, title: 'East Asian Masterpieces', count: 8,  updatedAt: 'Mar 2025', description: 'The best films from Japan, South Korea, Hong Kong and Taiwan.',     poster_url: 'https://image.tmdb.org/t/p/w342/iYypPT4bhqXfq1b6EnmxvRt6b2Y.jpg' },
+  { id: 2, title: 'Best of 2024',            count: 12, updatedAt: 'Mar 2025', description: 'Every great film released in 2024 ranked.',                           poster_url: 'https://image.tmdb.org/t/p/w342/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg' },
+  { id: 3, title: 'Essential Sci-Fi',        count: 10, updatedAt: 'Feb 2025', description: 'Must-watch science fiction from the last three decades.',              poster_url: 'https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg' },
+];
+
 export const trendingMovies = [
   { id: 1, emoji: '🌊', title: 'Dune: Part Two', year: 2024, stars: '★★★★★', duration: 166, country: 'USA', description: 'Paul Atreides travels to the dangerous planet Arrakis to ensure the future of his family and people in this epic sci-fi sequel.', poster_url: 'https://image.tmdb.org/t/p/w342/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg' },
   { id: 2, emoji: '🕵️', title: 'Severance S2', year: 2025, stars: '★★★★½', duration: 60, country: 'USA', description: 'A mysterious corporation separates employees\'s work and personal memories, blurring the line between identity and employment.', poster_url: 'https://image.tmdb.org/t/p/w342/AnI5jipbxwJg942QWy1KIeecMll.jpg' },
