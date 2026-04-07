@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { trendingMovies, topRatedMovies } from '../../../data/movies';
 import styles from './MovieDetail.module.css';
 
 export default function MovieDetail({ params }) {
+  const { id } = use(params);
   const allMovies = [...trendingMovies, ...topRatedMovies];
-  const movie = allMovies.find((m) => m.id === parseInt(params.id));
+  const movie = allMovies.find((m) => m.id === parseInt(id));
 
   const [watchedStatus, setWatchedStatus] = useState(false);
   const [onWatchlist, setOnWatchlist] = useState(false);
@@ -24,7 +25,10 @@ export default function MovieDetail({ params }) {
       <div className={styles.backdrop}>
         <div className={styles.header}>
           <div className={styles.poster}>
-            <span className={styles.posterEmoji}>{movie.emoji}</span>
+            {movie.poster_url
+              ? <img src={movie.poster_url} alt={movie.title} className={styles.posterImage} />
+              : <span className={styles.posterEmoji}>{movie.emoji}</span>
+            }
           </div>
 
           <div className={styles.info}>

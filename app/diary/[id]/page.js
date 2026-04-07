@@ -21,7 +21,10 @@ export default function DiaryDetail({ params }) {
       <div className={styles.backdrop}>
         <div className={styles.header}>
           <div className={styles.poster}>
-            <span className={styles.posterEmoji}>{diaryEntry.emoji}</span>
+            {diaryEntry.poster_url
+              ? <img src={diaryEntry.poster_url} alt={diaryEntry.title} className={styles.posterImage} />
+              : <span className={styles.posterEmoji}>{diaryEntry.emoji}</span>
+            }
           </div>
 
           <div className={styles.info}>
