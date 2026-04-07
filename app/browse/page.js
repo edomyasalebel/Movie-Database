@@ -59,12 +59,13 @@ export default function BrowsePage() {
       <Navbar />
       <main className={styles.container}>
         <h1 className={styles.heading}>Browse Films</h1>
+        <p className={styles.subheading}>Search and filter through the collection</p>
 
         {/* Search input */}
         <input
           className={styles.search}
           type="text"
-          placeholder="Search movies..."
+          placeholder="Search by title..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -82,6 +83,11 @@ export default function BrowsePage() {
           ))}
         </div>
 
+        {/* result count — shows how many movies match current filter */}
+        {filtered.length > 0 && (
+          <p className={styles.resultCount}>{filtered.length} film{filtered.length !== 1 ? 's' : ''}</p>
+        )}
+
         {/* Results grid */}
         <div className={styles.grid}>
           {filtered.map((movie) => (
@@ -89,9 +95,12 @@ export default function BrowsePage() {
           ))}
         </div>
 
-        {/* TODO: show a "no results" message when filtered is empty */}
+        {/* no results state */}
         {filtered.length === 0 && (
-          <p className={styles.empty}>No movies found.</p>
+          <div className={styles.noResults}>
+            <span>No results</span>
+            Try a different search or genre
+          </div>
         )}
       </main>
     </>

@@ -5,8 +5,6 @@ import { supabase } from '../../../lib/supabase';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import styles from './DiaryDetail.module.css';
 
-// hardcoded for now — will be replaced with real auth user later
-const EDOMYAS_ID = '3dff90a9-9260-4ee4-9222-58635650c81d';
 
 export default function DiaryDetail({ params }) {
   // useRouter gives us the router object so we can redirect programmatically
@@ -54,11 +52,12 @@ export default function DiaryDetail({ params }) {
       // STEP 3: fetch the review for this movie by this user
       // diary and reviews are separate tables — a user can have a diary entry
       // without a review, so this might come back empty (that's fine)
+      // use session.user.id instead of a hardcoded ID — works for any logged-in user
       const { data: reviewData } = await supabase
         .from('reviews')
         .select('rating, review_text')
         .eq('movie_id', diaryData.movie_id)  // same movie as the diary entry
-        .eq('user_id', EDOMYAS_ID)           // same user
+        .eq('user_id', session.user.id)      // the actual logged-in user
         .single();
 
       // review might not exist — that's ok, we just show "No review yet"

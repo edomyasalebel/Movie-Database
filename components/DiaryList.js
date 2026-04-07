@@ -4,20 +4,24 @@ import { supabase } from '../lib/supabase';
 import DiaryEntry from './DiaryEntry';
 import styles from './DiaryList.module.css';
 
-// hardcoded for now — will be replaced with real auth user later
-const EDOMYAS_ID = '3dff90a9-9260-4ee4-9222-58635650c81d';
-
 export default function DiaryList() {
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
     async function fetchDiary() {
-      // fetch diary entries and JOIN with movies table to get poster, title etc.
-      // diary.movie_id → movies.id (one-to-one relationship)
+      // Step 1: get the logged-in user's session INSIDE the async function
+      // await can only be used inside async functions — not at the top of a file
+      const { data: { session } } = await supabase.auth.getSession();
+
+      // if no one is logged in, nothing to fetch
+      if (!session) return;
+
+      // Step 2: fetch diary entries and JOIN with movies table
+      // now we use session.user.id — the actual logged-in user's ID
       const { data, error } = await supabase
         .from('diary')
         .select('id, watched_date, movies(id, title, release_year, poster_url, average_rating)')
-        .eq('user_id', EDOMYAS_ID)            // only this user's entries
+        .eq('user_id', session.user.id)        // only this user's entries
         .order('watched_date', { ascending: false }) // most recent first
         .limit(5);                             // only show 5 on the profile
 

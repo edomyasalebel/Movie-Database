@@ -15,7 +15,7 @@ const TABS = ['Overview', 'Reviews', 'Lists', 'Watchlist'];
 export default function Profile() {
   const router = useRouter();
   const [displayName, setDisplayName] = useState('');
-  const [memberSince, setMemberSince] = useState(''); // will hold "Jan 2025" format
+  const [memberSince, setMemberSince] = useState('');
   const [stats, setStats] = useState({ films: 0, reviews: 0, lists: 0, watchlist: 0 });
   const [username, setUserName] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
@@ -36,7 +36,7 @@ export default function Profile() {
         .eq('id', session.user.id)
         .single();
 
-      const { count: filmCount }     = await supabase.from('diary').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
+      const { count: filmCount } = await supabase.from('watched').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
       const { count: reviewCount }   = await supabase.from('reviews').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
       const { count: listCount }     = await supabase.from('lists').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
       const { count: watchlistCount} = await supabase.from('watchlist').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
