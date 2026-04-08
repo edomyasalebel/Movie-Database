@@ -1,8 +1,323 @@
+/* ── wrapper ── */
 .wrapper { margin-bottom: 36px; }
-.title { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--cream); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
-.title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.row { display: flex; gap: 12px; }
-.card { flex: 1; aspect-ratio: 2/3; border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, transform 0.2s; position: relative; overflow: hidden; }
+
+.title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* decorative line that extends to the right of the title */
+.title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── 5-slot row ── */
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+/* each slot — fixed 2:3 poster ratio */
+.card {
+  flex: 1;
+  aspect-ratio: 2/3;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface2);
+}
+
 .card:hover { border-color: var(--gold); transform: translateY(-4px); }
+
+/* poster fills the card */
+.posterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* fallback emoji when no poster url */
 .emoji { font-size: 28px; }
-.label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.78)); padding: 20px 8px 8px; font-size: 10px; font-weight: 500; color: var(--cream); text-align: center; line-height: 1.3; }
+
+/* title overlay at the bottom of filled cards */
+.label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.78));
+  padding: 20px 8px 8px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--cream);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ── empty slot ── */
+/* dashed border instead of solid to visually signal it's a placeholder */
+.emptySlot {
+  border-style: dashed;
+  border-color: var(--border2, #333);
+  background: transparent;
+}
+
+.emptySlot:hover { border-color: var(--gold); }
+
+/* the big + icon in empty slots */
+.addIcon {
+  font-size: 22px;
+  color: var(--muted);
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.emptySlot:hover .addIcon { color: var(--gold); }
+
+/* ── × remove button — top-right corner of filled cards ── */
+.removeBtn {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--cream);
+  font-size: 13px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;                    /* hidden until card is hovered */
+  transition: opacity 0.15s, background 0.15s;
+  padding: 0;
+}
+
+/* reveal remove button only on hover */
+.card:hover .removeBtn { opacity: 1; }
+.removeBtn:hover { background: rgba(200,50,50,0.75); }
+
+/* ── picker modal overlay ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* modal card */
+.pickerCard {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px 24px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* close × button in top-right of modal */
+.closeBtn {
+  position: absolute;
+  top: 14px; right: 16px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.closeBtn:hover { color: var(--cream); }
+
+.pickerTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+
+.pickerSub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* empty state inside picker */
+.pickerEmpty {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  padding: 32px 0;
+}
+
+/* scrollable list of watched movies */
+.pickerList {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* each row in the picker */
+.pickerItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pickerItem:hover { background: var(--surface3, rgba(255,255,255,0.05)); }
+
+/* small poster thumbnail */
+.pickerThumb {
+  width: 36px;
+  height: 54px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.pickerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* title + year column */
+.pickerInfo { flex: 1; min-width: 0; }
+
+.pickerName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pickerYear {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* the + icon at the right of each row */
+.pickerAdd {
+  font-size: 18px;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.pickerItem:hover .pickerAdd { color: var(--gold); }
+
+/* error message inside confirm or picker */
+.confirmError {
+  font-size: 12px;
+  color: #e05c5c;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(224,92,92,0.25);
+  border-radius: var(--radius);
+  background: rgba(224,92,92,0.07);
+}
+
+/* dims the picker list while an add is in flight */
+.pickerDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* ── confirm-remove mini-modal ── */
+/* sits on top of everything, centered, small card */
+.confirmCard {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.confirmTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.confirmSub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* confirm action buttons */
+.confirmBtns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cancelBtn {
+  padding: 9px 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 13px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.cancelBtn:hover { border-color: var(--cream); }
+
+.deleteBtn {
+  padding: 9px 20px;
+  background: rgba(200,50,50,0.75);
+  border: 1px solid transparent;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.deleteBtn:hover { opacity: 0.85; }

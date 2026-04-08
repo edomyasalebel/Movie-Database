@@ -19,6 +19,7 @@ export default function Profile() {
   const [stats, setStats] = useState({ films: 0, reviews: 0, lists: 0, watchlist: 0 });
   const [username, setUserName] = useState('');
   const [activeTab, setActiveTab] = useState('Overview');
+  const [loading, setLoading]     = useState(true); // true until all profile data is fetched
 
   useEffect(() => {
     async function checkAuth() {
@@ -50,10 +51,24 @@ export default function Profile() {
         new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
       );
 
-
+      setLoading(false); // all data ready — hide the logo loader
     }
     checkAuth();
   }, []); // [] = run once when page first loads
+
+  // ── logo loading screen ──
+  // shown while we wait for the session + profile queries to finish
+  // uses the same MD monogram style as the Navbar badge
+  if (loading) return (
+    <div className={styles.loadingScreen}>
+      <div className={styles.logoMark}>
+        <span className={styles.logoM}>M</span>
+        <span className={styles.logoD}>D</span>
+      </div>
+      <div className={styles.logoWord}>MovieDiary</div>
+    </div>
+  );
+
   return (
     <>
       <Navbar onLogout={() => router.push('/')} />

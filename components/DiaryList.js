@@ -9,44 +9,50 @@ export default function DiaryList() {
 
   useEffect(() => {
     async function fetchDiary() {
-      // Step 1: get the logged-in user's session INSIDE the async function
-      // await can only be used inside async functions — not at the top of a file
       const { data: { session } } = await supabase.auth.getSession();
-
-      // if no one is logged in, nothing to fetch
       if (!session) return;
 
-      // Step 2: fetch diary entries and JOIN with movies table
-      // now we use session.user.id — the actual logged-in user's ID
+      // Step 1: fetch diary entries joined with movies (no average_rating needed anymore)
       const { data, error } = await supabase
         .from('diary')
-        .select('id, watched_date, movies(id, title, release_year, poster_url, average_rating)')
-        .eq('user_id', session.user.id)        // only this user's entries
-        .order('watched_date', { ascending: false }) // most recent first
-        .limit(5);                             // only show 5 on the profile
+        .select('id, watched_date, movie_id, movies(id, title, release_year, poster_url)')
+        .eq('user_id', session.user.id)
+        .order('watched_date', { ascending: false })
+        .limit(5);
 
-      if (error) {
-        console.error('Error fetching diary:', error.message);
-        return;
-      }
+      if (error) { console.error('Error fetching diary:', error.message); return; }
 
-      // transform DB data into the shape DiaryEntry expects
-      // DB gives us: { id, watched_date, movies: { title, poster_url, ... } }
-      // DiaryEntry expects: { id, day, month, title, year, poster_url, stars }
+      // Step 2: fetch the user's own ratings for these movies
+      // we pull movie_ids from the diary results and look up reviews in one query
+      const movieIds = data.map((e) => e.movie_id);
+
+      const { data: reviewsData } = await supabase
+        .from('reviews')
+        .select('movie_id, rating')
+        .eq('user_id', session.user.id)
+        .in('movie_id', movieIds); // .in() = WHERE movie_id IN (1, 5, 7, ...)
+
+      // Step 3: build a lookup map { movie_id → rating } for fast access
+      // instead of looping through reviewsData for every diary entry
+      const ratingMap = {};
+      reviewsData?.forEach((r) => { ratingMap[r.movie_id] = r.rating; });
+
+      // Step 4: transform into shape DiaryEntry expects
       const transformed = data.map((entry) => {
-        const date = new Date(entry.watched_date);
+        // T12:00:00 prevents UTC midnight from shifting the date back one day
+        const date = new Date(entry.watched_date + 'T12:00:00');
         return {
-          id: entry.id,
-          // extract day number and short month name from the date
-          day:   date.getDate().toString(),
-          month: date.toLocaleString('default', { month: 'short' }),
+          id:        entry.id,
+          day:       date.getDate().toString(),
+          month:     date.toLocaleString('default', { month: 'short' }),
           title:     entry.movies.title,
           year:      entry.movies.release_year,
           poster_url: entry.movies.poster_url,
-          stars:     entry.movies.average_rating
-            ? '⭐ ' + entry.movies.average_rating
+          emoji:     '🎬',
+          // use the user's own rating from ratingMap, not the movie's average
+          stars: ratingMap[entry.movie_id]
+            ? '⭐ ' + ratingMap[entry.movie_id] + ' / 5'
             : '',
-          emoji: '🎬', // fallback if no poster
         };
       });
 
@@ -60,9 +66,10 @@ export default function DiaryList() {
     <div className={styles.wrapper}>
       <h3 className={styles.title}>Recent Diary</h3>
       <div className={styles.list}>
-        {entries.map((entry) => (
-          <DiaryEntry key={entry.id} entry={entry} />
-        ))}
+        {entries.length === 0
+          ? <p className={styles.empty}>No diary entries yet.</p>
+          : entries.map((entry) => <DiaryEntry key={entry.id} entry={entry} />)
+        }
       </div>
     </div>
   );

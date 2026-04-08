@@ -1,158 +1,456 @@
 .container {
   min-height: 100vh;
   background: var(--bg);
-  padding-top: 20px;
+  position: relative;
 }
 
-.backdrop {
-  max-width: 1200px;
+/* ── blurred backdrop ── */
+.backdropWrap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 520px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* the actual blurred poster image */
+.backdropImg {
+  position: absolute;
+  inset: -20px; /* overshoot edges so blur doesn't leave white gaps */
+  background-size: cover;
+  background-position: center top;
+  filter: blur(20px) brightness(0.25);
+}
+
+/* gradient that fades the backdrop into the page bg */
+.backdropFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(17,16,16,0.6) 60%,
+    var(--bg) 100%
+  );
+}
+
+/* ── main content sits above backdrop ── */
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 90px 40px 60px; /* 90px = navbar height + breathing room */
 }
 
 .header {
   display: flex;
-  gap: 40px;
+  gap: 48px;
   align-items: flex-start;
 }
 
+/* ── poster ── */
 .poster {
   flex-shrink: 0;
   width: 220px;
   height: 330px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+  background: var(--surface2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 80px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transition: transform 0.25s, box-shadow 0.25s;
-  overflow: hidden;
 }
 
-.posterImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.posterImage { width: 100%; height: 100%; object-fit: cover; }
+.posterEmoji { display: block; }
+
+/* ── info column ── */
+.info { flex: 1; }
+
+/* genre pills above title */
+.genrePills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
-.poster:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(201, 169, 110, 0.15);
-}
-
-.posterEmoji {
-  display: block;
-}
-
-.info {
-  flex: 1;
-  color: var(--cream);
+.genrePill {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gold);
+  border: 1px solid rgba(0,208,255,0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: 48px;
-  line-height: 1.1;
-  margin-bottom: 12px;
+  font-size: 52px;
+  font-weight: 300;
+  line-height: 1.05;
   color: var(--cream);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
 }
 
 .meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.dot { opacity: 0.4; }
+
+.ratingRow {
+  margin-bottom: 12px;
+}
+
+.ratingVal { font-size: 16px; color: var(--gold); font-weight: 500; }
+.ratingMax { font-size: 13px; color: var(--muted); }
+
+.director {
+  font-size: 13px;
   color: var(--muted);
   margin-bottom: 16px;
 }
 
-.rating {
-  margin-bottom: 24px;
-}
+.director strong { color: var(--cream); font-weight: 500; }
 
-.stars {
-  font-size: 18px;
+/* shown below description when user has already rated this movie */
+.yourRating {
+  font-size: 13px;
   color: var(--gold);
-  letter-spacing: 2px;
+  margin-bottom: 16px;
+  font-style: italic;
 }
 
 .description {
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--cream);
-  max-width: 600px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 580px;
   margin-bottom: 32px;
 }
 
+/* ── action buttons ── */
 .actions {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.btn {
-  padding: 12px 20px;
+/* divider between the two groups */
+.statusGroup {
+  display: flex;
+  gap: 8px;
+  padding-right: 16px;
+  border-right: 1px solid var(--border);
+}
+
+.actionGroup {
+  display: flex;
+  gap: 8px;
+}
+
+/* toggle buttons — outline → filled when active */
+.btnToggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
   background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  border: 1px solid var(--border);
+  color: var(--muted);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btnToggle:hover {
+  border-color: var(--gold);
+  color: var(--cream);
+}
+
+/* filled state when toggled on */
+.toggleActive {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
   font-weight: 500;
 }
 
-.btn:hover {
+.btnIcon { font-size: 12px; }
+
+/* Rate & Review — solid gold, more visual weight */
+.btnPrimary {
+  padding: 9px 18px;
   background: var(--gold);
+  border: 1px solid var(--gold);
   color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.btn.active {
-  background: var(--gold);
-  color: var(--bg);
+.btnPrimary:hover { opacity: 0.85; }
+
+/* Add to Diary — outlined, subtler */
+.btnSecondary {
+  padding: 9px 18px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
+.btnSecondary:hover {
+  border-color: var(--cream);
+}
+
+/* ── cast section ── */
+.cast {
+  margin-top: 52px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.castLabel {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+.castList {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.castItem {
+  min-width: 100px;
+}
+
+.castName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+}
+
+.castChar {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ── not found ── */
 .notFound {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
   color: var(--cream);
-  text-align: center;
 }
 
-.notFound h1 {
-  font-size: 32px;
-  margin-bottom: 12px;
+/* ── modal overlay ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 
+.modalCard {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.closeBtn:hover { color: var(--cream); }
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+
+.modalMovie {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+/* warning shown when user is overwriting a previous log */
+.relogNote {
+  font-size: 12px;
+  color: #e09a4a;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  border: 1px solid rgba(224,154,74,0.25);
+  border-radius: var(--radius);
+  background: rgba(224,154,74,0.06);
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+.optional { font-weight: 300; text-transform: none; letter-spacing: 0; font-size: 11px; }
+
+/* date picker */
+.dateInput {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.dateInput:focus { border-color: var(--gold); }
+
+/* rewatch checkbox */
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* clickable stars */
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--border2);
+  cursor: pointer;
+  transition: color 0.15s, transform 0.1s;
+  line-height: 1;
+  padding: 0;
+}
+
+.star:hover { transform: scale(1.15); }
+
+.starActive { color: var(--gold); }
+
+.ratingLabel {
+  font-size: 13px;
+  color: var(--gold);
+  margin-left: 8px;
+}
+
+/* review textarea */
+.textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+  line-height: 1.6;
+}
+.textarea:focus { border-color: var(--gold); }
+.textarea::placeholder { color: var(--muted2); }
+
+.formError {
+  font-size: 13px;
+  color: #e05c5c;
+  margin-top: 12px;
+}
+
+/* submit button */
+.submitBtn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: var(--gold);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.submitBtn:hover { opacity: 0.88; }
+.submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── mobile ── */
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .title {
-    font-size: 32px;
-  }
-
-  .poster {
-    width: 160px;
-    height: 240px;
-    font-size: 60px;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
+  .header { flex-direction: column; gap: 24px; }
+  .title { font-size: 36px; }
+  .poster { width: 160px; height: 240px; }
+  .statusGroup { border-right: none; padding-right: 0; }
+  .actions { flex-direction: column; align-items: flex-start; }
 }

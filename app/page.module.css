@@ -1,6 +1,144 @@
-.main { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
-.main::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, rgba(201,169,110,0.04) 0%, transparent 70%); pointer-events: none; }
-.hero { text-align: center; margin-bottom: 48px; animation: fadeUp 0.8s ease both; }
-.heading { font-family: var(--font-display); font-size: clamp(52px, 8vw, 88px); font-weight: 300; letter-spacing: -1px; line-height: 1.05; color: var(--cream); margin-bottom: 16px; }
-.heading em { font-style: italic; color: var(--gold); }
-.sub { font-size: 15px; font-weight: 300; color: var(--muted); letter-spacing: 0.3px; max-width: 340px; margin: 0 auto; }
+.main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── floating background layer ── */
+.bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 300;
+  white-space: nowrap;
+  user-select: none;
+  filter: blur(4px);
+  opacity: 0.1;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.floater em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ── positions & sizes ── */
+.f1 { font-size: 88px;  top: 5%;  left: 0%;  animation: orbit1 40s linear infinite; }
+.f2 { font-size: 44px;  top: 15%; left: 72%; animation: orbit2 28s linear infinite; opacity: 0.08; }
+.f3 { font-size: 66px;  top: 55%; left: 55%; animation: orbit3 52s linear infinite; }
+.f4 { font-size: 110px; top: 68%; left: 3%;  animation: orbit4 60s linear infinite; opacity: 0.06; }
+.f5 { font-size: 55px;  top: 82%; left: 42%; animation: orbit5 35s linear infinite; }
+.f6 { font-size: 80px;  top: 32%; left: 28%; animation: orbit6 45s linear infinite; opacity: 0.07; }
+.f7 { font-size: 50px;  top: -2%; left: 48%; animation: orbit7 32s linear infinite; }
+.f8 { font-size: 120px; top: 38%; left: -5%; animation: orbit8 58s linear infinite; opacity: 0.05; }
+
+/* ── multi-step keyframes so each floater traces a looping path ── */
+/* 4 waypoints → smooth continuous loop, never stops */
+
+@keyframes orbit1 {
+  0%   { transform: translate(0px,    0px)    rotate(-2deg); }
+  25%  { transform: translate(180px,  60px)   rotate(3deg);  }
+  50%  { transform: translate(140px,  180px)  rotate(-1deg); }
+  75%  { transform: translate(-40px,  120px)  rotate(-4deg); }
+  100% { transform: translate(0px,    0px)    rotate(-2deg); }
+}
+@keyframes orbit2 {
+  0%   { transform: translate(0px,    0px)    rotate(4deg);  }
+  25%  { transform: translate(-120px, 80px)   rotate(-2deg); }
+  50%  { transform: translate(-80px,  200px)  rotate(5deg);  }
+  75%  { transform: translate(60px,   140px)  rotate(-3deg); }
+  100% { transform: translate(0px,    0px)    rotate(4deg);  }
+}
+@keyframes orbit3 {
+  0%   { transform: translate(0px,    0px)    rotate(2deg);  }
+  25%  { transform: translate(-160px, -70px)  rotate(-3deg); }
+  50%  { transform: translate(-100px, -200px) rotate(4deg);  }
+  75%  { transform: translate(80px,   -120px) rotate(-1deg); }
+  100% { transform: translate(0px,    0px)    rotate(2deg);  }
+}
+@keyframes orbit4 {
+  0%   { transform: translate(0px,    0px)    rotate(-3deg); }
+  25%  { transform: translate(200px,  -80px)  rotate(2deg);  }
+  50%  { transform: translate(160px,  -220px) rotate(-4deg); }
+  75%  { transform: translate(-60px,  -140px) rotate(3deg);  }
+  100% { transform: translate(0px,    0px)    rotate(-3deg); }
+}
+@keyframes orbit5 {
+  0%   { transform: translate(0px,    0px)    rotate(5deg);  }
+  25%  { transform: translate(-100px, -60px)  rotate(-2deg); }
+  50%  { transform: translate(-60px,  -180px) rotate(3deg);  }
+  75%  { transform: translate(80px,   -100px) rotate(-4deg); }
+  100% { transform: translate(0px,    0px)    rotate(5deg);  }
+}
+@keyframes orbit6 {
+  0%   { transform: translate(0px,    0px)    rotate(-1deg); }
+  25%  { transform: translate(140px,  50px)   rotate(4deg);  }
+  50%  { transform: translate(80px,   180px)  rotate(-3deg); }
+  75%  { transform: translate(-80px,  100px)  rotate(2deg);  }
+  100% { transform: translate(0px,    0px)    rotate(-1deg); }
+}
+@keyframes orbit7 {
+  0%   { transform: translate(0px,    0px)    rotate(3deg);  }
+  25%  { transform: translate(-140px, 60px)   rotate(-4deg); }
+  50%  { transform: translate(-100px, 200px)  rotate(2deg);  }
+  75%  { transform: translate(60px,   120px)  rotate(-1deg); }
+  100% { transform: translate(0px,    0px)    rotate(3deg);  }
+}
+@keyframes orbit8 {
+  0%   { transform: translate(0px,    0px)    rotate(-4deg); }
+  25%  { transform: translate(160px,  -60px)  rotate(2deg);  }
+  50%  { transform: translate(120px,  -200px) rotate(-3deg); }
+  75%  { transform: translate(-40px,  -120px) rotate(4deg);  }
+  100% { transform: translate(0px,    0px)    rotate(-4deg); }
+}
+
+/* ── foreground content ── */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 88px);
+  font-weight: 300;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  max-width: 340px;
+  margin: 0 auto;
+}

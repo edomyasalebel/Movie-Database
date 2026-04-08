@@ -1,9 +1,106 @@
-.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: rgba(17,16,16,0.90); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-.logo { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--cream); cursor: pointer; }
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  background: rgba(17,16,16,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* logo area — monogram + wordmark */
+.logoWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* small square MD badge */
+.monogram {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--gold);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  flex-shrink: 0;
+}
+
+.monogramM {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1;
+}
+
+.monogramD {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--gold);
+  line-height: 1;
+}
+
+/* wordmark */
+.logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.3px;
+}
 .logo em { font-style: italic; color: var(--gold); }
+
 .navRight { display: flex; align-items: center; gap: 10px; }
-.navLink { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--font-body); padding: 6px 4px; transition: color 0.2s; }
+
+.navLink {
+  font-size: 13px; color: var(--muted);
+  background: none; border: none;
+  cursor: pointer; font-family: var(--font-body);
+  padding: 6px 8px;
+  transition: color 0.2s;
+  letter-spacing: 0.2px;
+}
 .navLink:hover { color: var(--cream); }
-.navLinkMuted { font-size: 13px; color: var(--muted2); background: none; border: none; cursor: pointer; font-family: var(--font-body); padding: 6px 4px; }
-.navLinkMuted:hover { color: var(--cream); }
-.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1.5px solid var(--gold); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+
+.navLinkMuted {
+  font-size: 13px; color: var(--muted2);
+  background: none; border: none;
+  cursor: pointer; font-family: var(--font-body);
+  padding: 6px 8px;
+  transition: color 0.2s;
+}
+.navLinkMuted:hover { color: var(--muted); }
+
+/* avatar circle — MD initials */
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1.5px solid var(--gold);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: 0;
+  transition: background 0.2s;
+}
+.avatar:hover { background: var(--surface3); }
+
+.avatarM {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1;
+}
+.avatarD {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--gold);
+  line-height: 1;
+}
