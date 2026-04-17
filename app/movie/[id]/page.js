@@ -18,9 +18,10 @@ export default function MovieDetail({ params }) {
   const [existingLog, setExistingLog]       = useState(null);
   const [existingReview, setExistingReview] = useState(null);
 
-  // local toggle states for watched/watchlist (UI only for now)
-  const [watchedStatus, setWatchedStatus] = useState(false);
-  const [onWatchlist, setOnWatchlist]     = useState(false);
+  const [watchedStatus, setWatchedStatus]       = useState(false);
+  const [onWatchlist, setOnWatchlist]           = useState(false);
+  const [watchlistLoading, setWatchlistLoading] = useState(false);
+  const [watchedLoading, setWatchedLoading]     = useState(false);
 
   // modal open state
   const [modal, setModal] = useState(null);
@@ -68,8 +69,23 @@ export default function MovieDetail({ params }) {
         setExistingLog(diaryData);       // null if not logged yet
         setExistingReview(reviewData);   // null if not reviewed yet
 
-        // if already logged, set watched toggle to active
-        if (diaryData) setWatchedStatus(true);
+        const { data: watchedData } = await supabase
+          .from('watched')
+          .select('movie_id')
+          .eq('user_id', session.user.id)
+          .eq('movie_id', id)
+          .maybeSingle();
+
+        if (watchedData) setWatchedStatus(true);
+
+        const { data: watchlistData } = await supabase
+          .from('watchlist')
+          .select('movie_id')
+          .eq('user_id', session.user.id)
+          .eq('movie_id', id)
+          .maybeSingle();
+
+        if (watchlistData) setOnWatchlist(true);
       }
 
       setLoading(false);
@@ -200,14 +216,45 @@ export default function MovieDetail({ params }) {
               <div className={styles.statusGroup}>
                 <button
                   className={`${styles.btnToggle} ${watchedStatus ? styles.toggleActive : ''}`}
-                  onClick={() => setWatchedStatus(!watchedStatus)}
+                  disabled={watchedLoading}
+                  onClick={async () => {
+                    setWatchedLoading(true);
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) { setWatchedLoading(false); return; }
+                    if (watchedStatus) {
+                      await supabase.from('watched').delete()
+                        .eq('user_id', session.user.id).eq('movie_id', Number(id));
+                      setWatchedStatus(false);
+                    } else {
+                      await supabase.from('watched').insert({ user_id: session.user.id, movie_id: Number(id) });
+                      setWatchedStatus(true);
+                    }
+                    setWatchedLoading(false);
+                  }}
                 >
                   <span className={styles.btnIcon}>{watchedStatus ? '✓' : '○'}</span>
                   {watchedStatus ? 'Watched' : 'Add to Watched'}
                 </button>
                 <button
                   className={`${styles.btnToggle} ${onWatchlist ? styles.toggleActive : ''}`}
-                  onClick={() => setOnWatchlist(!onWatchlist)}
+                  disabled={watchlistLoading}
+                  onClick={async () => {
+                    setWatchlistLoading(true);
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) { setWatchlistLoading(false); return; }
+                    if (onWatchlist) {
+                      await supabase.from('watchlist').delete()
+                        .eq('user_id', session.user.id).eq('movie_id', Number(id));
+                      await supabase.from('watched').delete()
+                        .eq('user_id', session.user.id).eq('movie_id', Number(id));
+                      setOnWatchlist(false);
+                      setWatchedStatus(false);
+                    } else {
+                      await supabase.from('watchlist').insert({ user_id: session.user.id, movie_id: Number(id) });
+                      setOnWatchlist(true);
+                    }
+                    setWatchlistLoading(false);
+                  }}
                 >
                   <span className={styles.btnIcon}>{onWatchlist ? '✓' : '+'}</span>
                   {onWatchlist ? 'On Watchlist' : 'Watchlist'}

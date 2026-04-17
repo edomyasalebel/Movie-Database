@@ -84,8 +84,10 @@ export default function Home() {
       <Navbar onLogout={() => router.push('/')} />
       <main className={styles.main}>
 
-        {/* search bar with live dropdown */}
+        {/* hero + search */}
         <div className={styles.searchHero}>
+          <h1 className={styles.heroHeadline}>What have you been <em>watching?</em></h1>
+          <p className={styles.heroSub}>Track films, write reviews, build your diary.</p>
           <div className={styles.searchWrap} ref={wrapRef}>
             <input
               className={styles.searchInput}

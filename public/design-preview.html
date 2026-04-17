@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MovieDiary — Option A Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:       #0f0e0d;
+    --surface:  #181614;
+    --surface2: #1e1b19;
+    --surface3: #252220;
+    --border:   #2c2825;
+    --border2:  #3a3530;
+    --gold:     #e8a930;
+    --gold-dim: rgba(232,169,48,0.12);
+    --gold-glow:rgba(232,169,48,0.06);
+    --cream:    #f0ebe4;
+    --muted:    #7a6f66;
+    --muted2:   #4e4540;
+    --red:      #c0392b;
+    --radius:   10px;
+    --radius-lg:16px;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--cream); font-family: var(--font-body); line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── layout ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; }
+  .section { margin-bottom: 64px; }
+  .section-label {
+    font-family: var(--font-body);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* ── navbar mock ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 58px;
+    background: rgba(15,14,13,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; z-index: 100;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-badge {
+    width: 32px; height: 32px; border-radius: 6px;
+    background: var(--surface3); border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 13px; gap: 1px;
+  }
+  .nav-badge .m { font-weight: 600; color: var(--cream); }
+  .nav-badge .d { font-style: italic; color: var(--gold); }
+  .nav-wordmark { font-family: var(--font-display); font-size: 20px; font-weight: 400; }
+  .nav-wordmark .movie { color: var(--cream); }
+  .nav-wordmark .diary { color: var(--gold); font-style: italic; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-link { font-size: 13px; color: var(--muted); transition: color 0.2s; cursor: pointer; }
+  .nav-link:hover, .nav-link.active { color: var(--cream); }
+  .nav-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--gold); background: var(--surface3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 12px; color: var(--gold);
+  }
+
+  /* ── palette ── */
+  .palette { display: flex; gap: 12px; flex-wrap: wrap; }
+  .swatch {
+    width: 100px; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .swatch-color { height: 60px; }
+  .swatch-info { padding: 8px 10px; background: var(--surface2); }
+  .swatch-name { font-size: 11px; font-weight: 500; color: var(--cream); }
+  .swatch-hex { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: monospace; }
+
+  /* ── type scale ── */
+  .type-row { display: flex; flex-direction: column; gap: 16px; }
+  .t1 { font-family: var(--font-display); font-size: 48px; font-weight: 400; color: var(--cream); line-height: 1.1; }
+  .t1 em { font-style: italic; color: var(--gold); }
+  .t2 { font-family: var(--font-display); font-size: 32px; font-weight: 400; color: var(--cream); }
+  .t3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--cream); }
+  .t4 { font-family: var(--font-body); font-size: 16px; font-weight: 400; color: var(--cream); }
+  .t5 { font-family: var(--font-body); font-size: 13px; color: var(--muted); }
+  .t6 { font-family: var(--font-body); font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* ── buttons ── */
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    padding: 10px 22px; border-radius: 8px; font-family: var(--font-body);
+    font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: none;
+  }
+  .btn-primary { background: var(--gold); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-outline { background: transparent; border: 1px solid var(--border2); color: var(--cream); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-ghost { background: transparent; border: none; color: var(--muted); }
+  .btn-ghost:hover { color: var(--cream); }
+  .btn-pill {
+    padding: 7px 18px; border-radius: 20px; font-family: var(--font-body);
+    font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    background: transparent; border: 1px solid var(--border2); color: var(--muted);
+  }
+  .btn-pill.active { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+  .btn-pill:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+  /* ── search ── */
+  .search-wrap { position: relative; max-width: 600px; }
+  .search-input {
+    width: 100%; padding: 14px 22px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 40px; color: var(--cream);
+    font-family: var(--font-body); font-size: 15px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,169,48,0.1); }
+  .search-input::placeholder { color: var(--muted); }
+  .search-drop {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  }
+  .drop-item { display: flex; align-items: center; gap: 14px; padding: 10px 16px; cursor: pointer; transition: background 0.15s; }
+  .drop-item:hover { background: var(--surface3); }
+  .drop-item + .drop-item { border-top: 1px solid var(--border); }
+  .drop-thumb { width: 34px; height: 50px; border-radius: 6px; background: var(--surface3); flex-shrink: 0; overflow: hidden; }
+  .drop-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .drop-title { font-size: 14px; font-weight: 500; color: var(--cream); }
+  .drop-year { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── movie cards ── */
+  .cards-row { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+  .cards-row::-webkit-scrollbar { display: none; }
+  .movie-card { flex-shrink: 0; width: 140px; cursor: pointer; transition: transform 0.25s; }
+  .movie-card:hover { transform: translateY(-6px); }
+  .movie-poster {
+    width: 140px; height: 210px; border-radius: var(--radius);
+    background: var(--surface3); border: 1px solid var(--border);
+    overflow: hidden; position: relative; transition: border-color 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .movie-card:hover .movie-poster { border-color: var(--gold); box-shadow: 0 12px 28px rgba(232,169,48,0.15); }
+  .movie-poster img { width: 100%; height: 100%; object-fit: cover; }
+  .movie-rank {
+    position: absolute; top: 8px; left: 10px;
+    font-family: var(--font-display); font-size: 13px; font-weight: 600;
+    color: var(--gold); text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+  }
+  .movie-title { font-size: 12px; font-weight: 500; color: var(--cream); margin-top: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .movie-year { font-size: 11px; color: var(--muted); text-align: center; margin-top: 2px; }
+  .movie-rating { font-size: 11px; color: var(--gold); text-align: center; margin-top: 2px; }
+
+  /* ── section header ── */
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .sec-bar { width: 3px; height: 22px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+  .sec-title { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--cream); }
+  .sec-sub { font-size: 13px; color: var(--muted); font-weight: 300; margin-left: 6px; }
+
+  /* ── hero section mock ── */
+  .hero-mock {
+    background: linear-gradient(160deg, var(--surface2) 0%, transparent 70%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 48px 40px 36px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .hero-headline {
+    font-family: var(--font-display); font-size: 48px; font-weight: 300;
+    color: var(--cream); line-height: 1.1;
+  }
+  .hero-headline em { font-style: italic; color: var(--gold); }
+  .hero-sub { font-size: 15px; color: var(--muted); font-weight: 300; }
+
+  /* ── top rated row ── */
+  .rated-list { display: flex; flex-direction: column; gap: 4px; }
+  .rated-item {
+    display: flex; align-items: center; gap: 20px;
+    padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: background 0.15s;
+  }
+  .rated-item:hover { background: var(--surface2); }
+  .rated-num { font-family: var(--font-display); font-size: 22px; font-weight: 300; color: var(--muted2); width: 32px; text-align: center; flex-shrink: 0; }
+  .rated-thumb { width: 52px; height: 76px; border-radius: 8px; background: var(--surface3); border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; transition: border-color 0.2s; }
+  .rated-item:hover .rated-thumb { border-color: var(--gold); }
+  .rated-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .rated-info { flex: 1; }
+  .rated-title { font-size: 15px; font-weight: 500; color: var(--cream); }
+  .rated-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .rated-score { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+  .rated-val { font-family: var(--font-display); font-size: 26px; font-weight: 400; color: var(--gold); line-height: 1; }
+  .rated-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── profile mock ── */
+  .profile-hero {
+    background: linear-gradient(160deg, var(--surface2) 0%, transparent 70%);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 36px 40px; display: flex; align-items: flex-end; gap: 28px;
+  }
+  .profile-avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 0 5px rgba(232,169,48,0.08), 0 12px 32px rgba(0,0,0,0.5);
+    background: var(--surface3); display: flex; align-items: center;
+    justify-content: center; font-size: 34px; flex-shrink: 0;
+  }
+  .profile-meta { flex: 1; }
+  .profile-name { font-family: var(--font-display); font-size: 36px; font-weight: 400; color: var(--cream); line-height: 1.1; }
+  .profile-sub { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; }
+  .profile-stats { display: flex; gap: 0; margin-top: 20px; }
+  .profile-stat { padding-right: 24px; margin-right: 24px; border-right: 1px solid var(--border); }
+  .profile-stat:last-child { border-right: none; }
+  .stat-val { font-family: var(--font-display); font-size: 24px; color: var(--cream); line-height: 1; }
+  .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  /* ── tabs ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-top: 24px; gap: 4px; }
+  .tab { font-size: 13px; color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; padding: 14px 20px; cursor: pointer; font-family: var(--font-body); transition: color 0.2s, border-color 0.2s; margin-bottom: -1px; letter-spacing: 0.3px; }
+  .tab:hover { color: var(--cream); }
+  .tab.active { color: var(--cream); font-weight: 500; border-bottom-color: var(--gold); }
+
+  /* ── modal mock ── */
+  .modal-mock {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-lg); padding: 28px; max-width: 400px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .modal-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--cream); }
+  .modal-field { display: flex; flex-direction: column; gap: 6px; }
+  .modal-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .modal-input {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--cream); font-family: var(--font-body);
+    font-size: 14px; padding: 10px 14px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .modal-input:focus { border-color: var(--gold); }
+  .stars-row { display: flex; gap: 6px; }
+  .star { font-size: 24px; color: var(--border2); cursor: pointer; transition: color 0.15s; }
+  .star.on { color: var(--gold); }
+  .submit-btn { background: var(--gold); color: var(--bg); border: none; border-radius: var(--radius); padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: opacity 0.2s; }
+  .submit-btn:hover { opacity: 0.88; }
+
+  /* divider */
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  .spacer { height: 58px; }
+</style>
+</head>
+<body>
+
+<!-- navbar -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-badge"><span class="m">M</span><span class="d">D</span></div>
+    <div class="nav-wordmark"><span class="movie">Movie</span><span class="diary">Diary</span></div>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link active">Home</span>
+    <span class="nav-link">Browse</span>
+    <span class="nav-link">Profile</span>
+    <span class="nav-link">Sign out</span>
+    <div class="nav-avatar">MD</div>
+  </div>
+</nav>
+
+<div class="spacer"></div>
+
+<div class="page">
+
+  <!-- ── PALETTE ── -->
+  <div class="section">
+    <div class="section-label">Colour Palette</div>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#0f0e0d"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#0f0e0d</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#181614"></div><div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">#181614</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1e1b19"></div><div class="swatch-info"><div class="swatch-name">Surface 2</div><div class="swatch-hex">#1e1b19</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#252220"></div><div class="swatch-info"><div class="swatch-name">Surface 3</div><div class="swatch-hex">#252220</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#2c2825"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#2c2825</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#e8a930"></div><div class="swatch-info"><div class="swatch-name">Gold ✦</div><div class="swatch-hex">#e8a930</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f0ebe4"></div><div class="swatch-info"><div class="swatch-name">Cream</div><div class="swatch-hex">#f0ebe4</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#7a6f66"></div><div class="swatch-info"><div class="swatch-name">Muted</div><div class="swatch-hex">#7a6f66</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── TYPOGRAPHY ── -->
+  <div class="section">
+    <div class="section-label">Typography</div>
+    <div class="type-row">
+      <div class="t1">What have you been <em>watching?</em></div>
+      <div class="t2">Cormorant Garamond — Display</div>
+      <div class="t3">Section Heading / List Titles</div>
+      <div class="t4">Outfit — Body text, labels, UI elements</div>
+      <div class="t5">Secondary text, metadata, captions</div>
+      <div class="t6">Uppercase label · 10px · 1.5 letter-spacing</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── HOME HERO ── -->
+  <div class="section">
+    <div class="section-label">Home — Hero + Search</div>
+    <div class="hero-mock">
+      <div class="hero-headline">What have you been <em>watching?</em></div>
+      <div class="hero-sub">Track films, write reviews, build your diary.</div>
+      <div class="search-wrap" style="width:100%">
+        <input class="search-input" placeholder="Search films..." />
+        <div class="search-drop">
+          <div class="drop-item">
+            <div class="drop-thumb" style="background:#2a1f10"></div>
+            <div><div class="drop-title">Parasite</div><div class="drop-year">2019</div></div>
+          </div>
+          <div class="drop-item">
+            <div class="drop-thumb" style="background:#0d1a2a"></div>
+            <div><div class="drop-title">Interstellar</div><div class="drop-year">2014</div></div>
+          </div>
+          <div class="drop-item">
+            <div class="drop-thumb" style="background:#1a1020"></div>
+            <div><div class="drop-title">In the Mood for Love</div><div class="drop-year">2000</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GENRE PILLS ── -->
+  <div class="section">
+    <div class="section-label">Genre Filter Pills</div>
+    <div class="btn-row">
+      <button class="btn-pill active">All</button>
+      <button class="btn-pill">Drama</button>
+      <button class="btn-pill">Sci-Fi</button>
+      <button class="btn-pill">Thriller</button>
+      <button class="btn-pill">Romance</button>
+      <button class="btn-pill">Crime</button>
+      <button class="btn-pill">Animation</button>
+    </div>
+  </div>
+
+  <!-- ── TRENDING ROW ── -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <h2 class="sec-title">Trending <span class="sec-sub">this week</span></h2>
+    </div>
+    <div class="cards-row">
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#2a1205,#5c2a0a)">
+          <span class="movie-rank">#1</span>
+          <span style="font-size:48px">🎬</span>
+        </div>
+        <div class="movie-title">Parasite</div>
+        <div class="movie-year">2019</div>
+        <div class="movie-rating">4.9</div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#0a1a30,#0d2a50)">
+          <span class="movie-rank">#2</span>
+          <span style="font-size:48px">🚀</span>
+        </div>
+        <div class="movie-title">Interstellar</div>
+        <div class="movie-year">2014</div>
+        <div class="movie-rating">4.6</div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#1a0a20,#2d1040)">
+          <span class="movie-rank">#3</span>
+          <span style="font-size:48px">❤️</span>
+        </div>
+        <div class="movie-title">In the Mood for Love</div>
+        <div class="movie-year">2000</div>
+        <div class="movie-rating">4.8</div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#1a1200,#3d2c00)">
+          <span class="movie-rank">#4</span>
+          <span style="font-size:48px">🏜️</span>
+        </div>
+        <div class="movie-title">Dune: Part Two</div>
+        <div class="movie-year">2024</div>
+        <div class="movie-rating">4.7</div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#0a1a0a,#0d300d)">
+          <span class="movie-rank">#5</span>
+          <span style="font-size:48px">🎭</span>
+        </div>
+        <div class="movie-title">Shoplifters</div>
+        <div class="movie-year">2018</div>
+        <div class="movie-rating">4.7</div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-poster" style="background: linear-gradient(135deg,#1a0a0a,#3a1010)">
+          <span class="movie-rank">#6</span>
+          <span style="font-size:48px">🤠</span>
+        </div>
+        <div class="movie-title">No Country for Old Men</div>
+        <div class="movie-year">2007</div>
+        <div class="movie-rating">4.6</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOP RATED ── -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <h2 class="sec-title">Top Rated <span class="sec-sub">all time</span></h2>
+    </div>
+    <div class="rated-list">
+      <div class="rated-item">
+        <div class="rated-num">1</div>
+        <div class="rated-thumb" style="background:linear-gradient(135deg,#2a1205,#5c2a0a)"></div>
+        <div class="rated-info"><div class="rated-title">Parasite</div><div class="rated-meta">2019 · South Korea</div></div>
+        <div class="rated-score"><div class="rated-val">4.9</div><div class="rated-label">Score</div></div>
+      </div>
+      <div class="rated-item">
+        <div class="rated-num">2</div>
+        <div class="rated-thumb" style="background:linear-gradient(135deg,#1a0a20,#2d1040)"></div>
+        <div class="rated-info"><div class="rated-title">In the Mood for Love</div><div class="rated-meta">2000 · Hong Kong</div></div>
+        <div class="rated-score"><div class="rated-val">4.8</div><div class="rated-label">Score</div></div>
+      </div>
+      <div class="rated-item">
+        <div class="rated-num">3</div>
+        <div class="rated-thumb" style="background:linear-gradient(135deg,#0a1a30,#0d2a50)"></div>
+        <div class="rated-info"><div class="rated-title">Interstellar</div><div class="rated-meta">2014 · USA</div></div>
+        <div class="rated-score"><div class="rated-val">4.6</div><div class="rated-label">Score</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── PROFILE MOCK ── -->
+  <div class="section">
+    <div class="section-label">Profile Header</div>
+    <div class="profile-hero">
+      <div class="profile-avatar">🎬</div>
+      <div class="profile-meta">
+        <div class="profile-name">Edomyas</div>
+        <div class="profile-sub">@edomyas · Member since Jan 2024</div>
+        <div class="profile-stats">
+          <div class="profile-stat"><div class="stat-val">47</div><div class="stat-label">Films</div></div>
+          <div class="profile-stat"><div class="stat-val">12</div><div class="stat-label">Reviews</div></div>
+          <div class="profile-stat"><div class="stat-val">5</div><div class="stat-label">Lists</div></div>
+          <div class="profile-stat"><div class="stat-val">18</div><div class="stat-label">Watchlist</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active">Overview</button>
+      <button class="tab">Reviews</button>
+      <button class="tab">Lists</button>
+      <button class="tab">Watchlist</button>
+    </div>
+  </div>
+
+  <!-- ── BUTTONS ── -->
+  <div class="section">
+    <div class="section-label">Buttons & Controls</div>
+    <div class="btn-row">
+      <button class="btn btn-primary">Rate &amp; Log</button>
+      <button class="btn btn-outline">Add to Watchlist</button>
+      <button class="btn btn-outline" style="border-color:var(--gold);color:var(--gold)">✓ Watched</button>
+      <button class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ── MODAL ── -->
+  <div class="section">
+    <div class="section-label">Log Film Modal</div>
+    <div class="modal-mock">
+      <div class="modal-title">Rate &amp; Log</div>
+      <div style="font-size:13px;color:var(--muted)">Parasite</div>
+      <div class="modal-field">
+        <div class="modal-label">Rating</div>
+        <div class="stars-row">
+          <span class="star on">★</span>
+          <span class="star on">★</span>
+          <span class="star on">★</span>
+          <span class="star on">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">Review <span style="text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></div>
+        <input class="modal-input" placeholder="What did you think?" />
+      </div>
+      <button class="submit-btn">Log Film</button>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

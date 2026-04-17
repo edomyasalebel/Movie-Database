@@ -3,10 +3,10 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #111010; --surface: #1a1918; --surface2: #222120; --surface3: #2a2826;
-  --border: #2e2c2a; --border2: #3d3a38; --gold: #00d0ff;
-  --gold-dim: rgba(57, 227, 35, 0.12); --gold-dim2: rgba(201,169,110,0.06);
-  --cream: #f2ede8; --muted: #7a736e; --muted2: #524e4b;
+  --bg: #0f0e0d; --surface: #181614; --surface2: #1e1b19; --surface3: #252220;
+  --border: #2c2825; --border2: #3a3530; --gold: #e8a930;
+  --gold-dim: rgba(232,169,48,0.12); --gold-dim2: rgba(232,169,48,0.06);
+  --cream: #f0ebe4; --muted: #7a6f66; --muted2: #4e4540;
   --radius: 10px; --radius-lg: 16px;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Outfit', sans-serif;

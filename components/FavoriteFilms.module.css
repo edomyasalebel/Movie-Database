@@ -3,16 +3,23 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
   color: var(--cream);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* decorative line that extends to the right of the title */
+.title::before {
+  content: '';
+  width: 3px; height: 20px;
+  background: var(--gold);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
 .title::after {
   content: '';
   flex: 1;

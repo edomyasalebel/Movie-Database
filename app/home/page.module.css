@@ -1,33 +1,62 @@
 .main {
   padding-top: 58px;
   min-height: 100vh;
+  background: var(--bg);
 }
 
+/* ── hero search ── */
 .searchHero {
-  padding: 20px 40px 0;
+  padding: 56px 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
 }
 
-/* wrapper needed so the dropdown positions relative to the input */
+.heroHeadline {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.heroHeadline em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.heroSub {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 300;
+  margin-top: -8px;
+}
+
 .searchWrap {
   position: relative;
-  max-width: 100%;
+  width: 100%;
+  max-width: 620px;
 }
 
 .searchInput {
   width: 100%;
-  padding: 11px 18px;
+  padding: 14px 22px;
   background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  border-radius: 40px;
   color: var(--cream);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .searchInput:focus {
   border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(0, 208, 255, 0.08);
 }
 
 .searchInput::placeholder {
@@ -38,40 +67,33 @@
 /* live results dropdown */
 .dropdown {
   position: absolute;
-  top: calc(100% + 6px); /* just below the input */
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
   background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
   z-index: 100;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
 
-/* each result row */
 .dropItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  gap: 14px;
+  padding: 10px 16px;
   transition: background 0.15s;
   cursor: pointer;
 }
 
-.dropItem:hover {
-  background: var(--surface3);
-}
+.dropItem:hover { background: var(--surface3); }
+.dropItem + .dropItem { border-top: 1px solid var(--border); }
 
-.dropItem + .dropItem {
-  border-top: 1px solid var(--border);
-}
-
-/* tiny poster */
 .dropThumb {
-  width: 32px;
-  height: 48px;
-  border-radius: 4px;
+  width: 34px;
+  height: 50px;
+  border-radius: 6px;
   background: var(--surface);
   flex-shrink: 0;
   overflow: hidden;
@@ -81,16 +103,11 @@
   font-size: 14px;
 }
 
-.dropImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+.dropImg { width: 100%; height: 100%; object-fit: cover; }
 .dropInfo { flex: 1; min-width: 0; }
 
 .dropTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--cream);
   white-space: nowrap;
@@ -98,12 +115,9 @@
   text-overflow: ellipsis;
 }
 
-.dropYear {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-}
+.dropYear { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
+/* ── section divider ── */
 .divider {
   height: 1px;
   background: var(--border);

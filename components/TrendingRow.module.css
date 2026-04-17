@@ -1,7 +1,13 @@
-.label { display: flex; align-items: center; gap: 10px; padding: 28px 40px 16px; }
-.label h2 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--cream); }
-.label h2 span { font-size: 14px; color: var(--muted); font-weight: 300; margin-left: 4px; }
-.bar { width: 3px; height: 18px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
-/* fixed: was missing px on the top value — 10 → 10px */
-.row { display: flex; gap: 14px; padding: 10px 40px 32px; overflow-x: auto; scrollbar-width: none; }
+.section { }
+.label { display: flex; align-items: center; gap: 10px; padding: 36px 40px 20px; }
+.label h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--cream); }
+.label h2 span { font-size: 14px; color: var(--muted); font-weight: 300; margin-left: 6px; }
+.bar { width: 3px; height: 22px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+.row {
+  display: flex;
+  gap: 16px;
+  padding: 4px 40px 36px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
 .row::-webkit-scrollbar { display: none; }

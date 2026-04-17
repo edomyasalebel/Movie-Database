@@ -7,10 +7,11 @@ import DiaryList from '../../components/DiaryList';
 import ReviewsList from '../../components/ReviewsList';
 import WatchlistGrid from '../../components/WatchlistGrid';
 import ListsGrid from '../../components/ListsGrid';
+import AdminPanel from '../../components/AdminPanel';
 import { supabase } from '../../lib/supabase';
 import styles from './page.module.css';
 
-const TABS = ['Overview', 'Reviews', 'Lists', 'Watchlist'];
+const BASE_TABS = ['Overview', 'Reviews', 'Lists', 'Watchlist'];
 
 export default function Profile() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Profile() {
   const [memberSince, setMemberSince] = useState('');
   const [stats, setStats] = useState({ films: 0, reviews: 0, lists: 0, watchlist: 0 });
   const [username, setUserName] = useState('');
+  const [isAdmin, setIsAdmin]   = useState(false);
   const [activeTab, setActiveTab] = useState('Overview');
   const [loading, setLoading]     = useState(true); // true until all profile data is fetched
 
@@ -33,7 +35,7 @@ export default function Profile() {
       }
       const { data: profile } = await supabase
         .from('users')
-        .select('display_name , username, created_at')
+        .select('display_name, username, created_at, admin_access')
         .eq('id', session.user.id)
         .single();
 
@@ -43,9 +45,10 @@ export default function Profile() {
       const { count: watchlistCount} = await supabase.from('watchlist').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
 
       // Step 3: if we got a profile, save the display_name to state
-      if(profile) setStats({ films: filmCount, reviews: reviewCount, lists: listCount, watchlist: watchlistCount });
+      if (profile) setStats({ films: filmCount, reviews: reviewCount, lists: listCount, watchlist: watchlistCount });
       if (profile) setDisplayName(profile.display_name);
-      if(profile) setUserName(profile.username);
+      if (profile) setUserName(profile.username);
+      if (profile) setIsAdmin(!!profile.admin_access);
       // toLocaleDateString with month+year gives us "Jan 2025" in one go
       if (profile) setMemberSince(
         new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
@@ -68,6 +71,8 @@ export default function Profile() {
       <div className={styles.logoWord}>MovieDiary</div>
     </div>
   );
+
+  const TABS = isAdmin ? [...BASE_TABS, 'ADMIN'] : BASE_TABS;
 
   return (
     <>
@@ -95,14 +100,21 @@ export default function Profile() {
         </div>
         <div className={styles.tabs}>
           {TABS.map((tab) => (
-            <button key={tab} className={`${styles.tab} ${activeTab === tab ? styles.active : ''}`} onClick={() => setActiveTab(tab)}>{tab}</button>
+            <button
+              key={tab}
+              className={`${styles.tab} ${activeTab === tab ? styles.active : ''} ${tab === 'ADMIN' ? styles.adminTab : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
           ))}
         </div>
         <div className={styles.body}>
-          {activeTab === 'Overview' && <><FavoriteFilms /><DiaryList /></>}
-          {activeTab === 'Reviews' && <ReviewsList />}
-          {activeTab === 'Lists' && <ListsGrid />}
+          {activeTab === 'Overview'  && <><FavoriteFilms /><DiaryList /></>}
+          {activeTab === 'Reviews'   && <ReviewsList />}
+          {activeTab === 'Lists'     && <ListsGrid />}
           {activeTab === 'Watchlist' && <WatchlistGrid />}
+          {activeTab === 'ADMIN'     && <AdminPanel />}
         </div>
       </main>
     </>

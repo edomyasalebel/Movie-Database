@@ -1,5 +1,4 @@
-/* ── logo loading screen ── */
-/* full-viewport centered column, shown while profile data is fetching */
+/* ── loading screen ── */
 .loadingScreen {
   min-height: 100vh;
   display: flex;
@@ -11,150 +10,129 @@
   animation: fadeInLoader 0.3s ease;
 }
 
-/* the square MD badge — same style as Navbar */
 .logoMark {
-  width: 52px;
-  height: 52px;
+  width: 52px; height: 52px;
   border-radius: 8px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   gap: 1px;
-  /* pulse: smoothly breathes in and out */
   animation: pulse 1.6s ease-in-out infinite;
 }
 
-.logoM {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--cream);
-  line-height: 1;
-}
+.logoM { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--cream); line-height: 1; }
+.logoD { font-family: var(--font-display); font-size: 20px; font-weight: 400; font-style: italic; color: var(--gold); line-height: 1; }
 
-.logoD {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--gold); /* cyan/gold accent — same as Navbar */
-  line-height: 1;
-}
-
-/* "MovieDiary" wordmark below the badge */
 .logoWord {
   font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-size: 14px; font-weight: 300; color: var(--muted);
+  letter-spacing: 2px; text-transform: uppercase;
   animation: pulse 1.6s ease-in-out infinite;
-  animation-delay: 0.1s; /* slight offset so badge and text don't pulse in lockstep */
+  animation-delay: 0.1s;
 }
 
-/* gentle opacity breathe — not a spinner, just calm */
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50%       { opacity: 1;   }
-}
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+@keyframes fadeInLoader { from { opacity: 0; } to { opacity: 1; } }
 
-/* prevent a flash of content when the component first mounts */
-@keyframes fadeInLoader {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+/* ── page ── */
+.main { padding-top: 58px; min-height: 100vh; background: var(--bg); }
 
-.main { padding-top: 58px; min-height: 100vh; }
-
-/* subtle gradient band behind the hero so it doesn't sit on raw black */
+/* ── hero ── */
 .hero {
-  padding: 48px 40px 0;
+  padding: 48px 48px 0;
   display: flex;
   align-items: flex-end;
-  gap: 32px;
+  gap: 28px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(to bottom, var(--surface2) 0%, transparent 100%);
+  background: linear-gradient(160deg, var(--surface2) 0%, transparent 70%);
 }
 
-/* avatar — slightly larger, soft gold glow so it pops */
 .avatarWrap {
-  width: 96px;
-  height: 96px;
+  width: 100px; height: 100px;
   border-radius: 50%;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 0 4px rgba(0,208,255,0.08), 0 8px 24px rgba(0,0,0,0.4);
-  background: var(--surface2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  margin-bottom: 24px;
+  box-shadow: 0 0 0 5px rgba(0,208,255,0.07), 0 12px 32px rgba(0,0,0,0.5);
+  background: var(--surface3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px;
+  margin-bottom: 28px;
   flex-shrink: 0;
 }
 
-.meta { flex: 1; }
+.meta { flex: 1; padding-bottom: 28px; }
 
-/* thin gold accent bar to the left of the name */
 .displayName {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 400;
   color: var(--cream);
   line-height: 1.1;
-  padding-left: 14px;
-  border-left: 3px solid var(--gold);
+  letter-spacing: 0.01em;
 }
 
 .username {
   font-size: 13px;
   color: var(--muted);
   margin-top: 6px;
-  margin-left: 1px;
   font-weight: 300;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
-/* stats row — each item separated by a faint vertical rule */
+/* stats */
 .stats {
   display: flex;
   gap: 0;
-  margin-top: 20px;
-  padding-bottom: 24px;
+  margin-top: 24px;
 }
 
 .stat {
   text-align: left;
-  padding: 0 24px 0 0;
-  margin-right: 24px;
+  padding-right: 28px;
+  margin-right: 28px;
   border-right: 1px solid var(--border);
 }
-
-.stat:last-child {
-  border-right: none;
-}
+.stat:last-child { border-right: none; padding-right: 0; margin-right: 0; }
 
 .statVal {
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--cream);
-  line-height: 1;
+  font-size: 26px; font-weight: 400;
+  color: var(--cream); line-height: 1;
 }
 
 .statLabel {
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-top: 4px;
+  font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-top: 5px;
 }
 
-.tabs { display: flex; padding: 0 40px; border-bottom: 1px solid var(--border); }
-.tab { font-size: 13px; color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; padding: 14px 18px; cursor: pointer; font-family: var(--font-body); transition: color 0.2s, border-color 0.2s; margin-bottom: -1px; }
+/* ── tabs ── */
+.tabs {
+  display: flex;
+  padding: 0 48px;
+  border-bottom: 1px solid var(--border);
+  gap: 4px;
+}
+
+.tab {
+  font-size: 13px; font-weight: 400;
+  color: var(--muted);
+  background: none; border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 20px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  letter-spacing: 0.3px;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+}
 .tab:hover { color: var(--cream); }
-.tab.active { color: var(--cream); border-bottom-color: var(--gold); }
-.body { padding: 32px 40px 60px; }
+.tab.active { color: var(--cream); font-weight: 500; border-bottom-color: var(--gold); }
+
+.adminTab { color: #c0392b !important; letter-spacing: 1px; font-size: 11px; font-weight: 600; }
+.adminTab:hover { color: #e74c3c !important; }
+.adminTab.active { color: #e74c3c !important; border-bottom-color: #c0392b; }
+
+/* ── body ── */
+.body { padding: 36px 48px 72px; max-width: 1200px; }
+
 .empty { font-size: 14px; color: var(--muted); padding: 20px 0; }
