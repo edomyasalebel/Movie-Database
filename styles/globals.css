@@ -12,6 +12,13 @@
   --font-body: 'Outfit', sans-serif;
 }
 
+[data-theme="light"] {
+  --bg: #ffffff; --surface: #f7f5f2; --surface2: #efede9; --surface3: #e5e1db;
+  --border: #e0dbd3; --border2: #cdc7be; --gold: #b8760a;
+  --gold-dim: rgba(184,118,10,0.10); --gold-dim2: rgba(184,118,10,0.05);
+  --cream: #181512; --muted: #6e6560; --muted2: #a8a099;
+}
+
 html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--cream); font-family: var(--font-body); font-weight: 400; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }

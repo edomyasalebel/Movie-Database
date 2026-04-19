@@ -7,6 +7,20 @@ import styles from './Navbar.module.css';
 export default function Navbar({ onLogout }) {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
+    document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+
+  function toggleTheme() {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -34,6 +48,9 @@ export default function Navbar({ onLogout }) {
         <button className={styles.navLink} onClick={() => router.push('/browse')}>Browse</button>
         <button className={styles.navLink} onClick={() => router.push('/profile')}>Profile</button>
         {isAdmin && <button className={styles.navLink} onClick={() => router.push('/sql')}>SQL</button>}
+        <button className={styles.themeToggle} onClick={toggleTheme} title="Toggle theme">
+          {theme === 'dark' ? '☀' : '☾'}
+        </button>
         <button className={styles.navLinkMuted} onClick={onLogout}>Sign out</button>
         {/* avatar — MD initials matching the monogram */}
         <div className={styles.avatar} onClick={() => router.push('/profile')}>

@@ -3,7 +3,7 @@
   height: 58px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 40px;
-  background: rgba(17,16,16,0.92);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
@@ -76,6 +76,14 @@
   transition: color 0.2s;
 }
 .navLinkMuted:hover { color: var(--muted); }
+
+.themeToggle {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; padding: 6px 8px;
+  color: var(--muted); transition: color 0.2s;
+  line-height: 1;
+}
+.themeToggle:hover { color: var(--gold); }
 
 /* avatar circle — MD initials */
 .avatar {

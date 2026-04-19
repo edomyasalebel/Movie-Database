@@ -16,10 +16,15 @@
 /* the actual blurred poster image */
 .backdropImg {
   position: absolute;
-  inset: -20px; /* overshoot edges so blur doesn't leave white gaps */
+  inset: -20px;
   background-size: cover;
   background-position: center top;
-  filter: blur(20px) brightness(0.25);
+  filter: blur(20px) brightness(0.3);
+}
+
+[data-theme="light"] .backdropImg {
+  filter: blur(24px) brightness(0.85) saturate(0.4);
+  opacity: 0.25;
 }
 
 /* gradient that fades the backdrop into the page bg */
@@ -29,7 +34,7 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(17,16,16,0.6) 60%,
+    color-mix(in srgb, var(--bg) 60%, transparent) 60%,
     var(--bg) 100%
   );
 }
