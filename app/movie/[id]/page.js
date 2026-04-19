@@ -4,14 +4,16 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import Navbar from '../../../components/Navbar';
 import LoadingSpinner from '../../../components/LoadingSpinner';
+import PosterCard from '../../../components/PosterCard';
 import styles from './MovieDetail.module.css';
 
 export default function MovieDetail({ params }) {
   const router = useRouter();
   const { id } = use(params);
 
-  const [movie, setMovie]     = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [movie, setMovie]         = useState(null);
+  const [loading, setLoading]     = useState(true);
+  const [similar, setSimilar]     = useState([]);
 
   // tracks whether the logged-in user has already logged/reviewed this movie
   // null = not checked yet, object = existing data, false = doesn't exist
@@ -89,6 +91,10 @@ export default function MovieDetail({ params }) {
       }
 
       setLoading(false);
+
+      // find similar movies by shared genres + actors from our DB
+      supabase.rpc('get_similar_movies', { mid: Number(id), lim: 8 })
+        .then(({ data }) => setSimilar(data || []));
     }
 
     init();
@@ -195,7 +201,7 @@ export default function MovieDetail({ params }) {
             </div>
 
             <div className={styles.ratingRow}>
-              <span className={styles.ratingVal}>⭐ {movie.average_rating}</span>
+              <span className={styles.ratingVal}>⭐ {Number(movie.average_rating).toFixed(2)}</span>
               <span className={styles.ratingMax}> / 5</span>
             </div>
 
@@ -280,6 +286,20 @@ export default function MovieDetail({ params }) {
                   <div className={styles.castName}>{a.people?.name}</div>
                   {a.character_name && <div className={styles.castChar}>{a.character_name}</div>}
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {similar.length > 0 && (
+          <div className={styles.similarSection}>
+            <div className={styles.similarLabel}>
+              <div className={styles.similarBar} />
+              <h2>More like this</h2>
+            </div>
+            <div className={styles.similarRow}>
+              {similar.map((m) => (
+                <PosterCard key={m.id} movie={m} />
               ))}
             </div>
           </div>

@@ -24,7 +24,7 @@ export default function TopRatedList({ movies = [] }) {
               <div className={styles.meta}>{movie.release_year} · {movie.country}</div>
             </div>
             <div className={styles.score}>
-              <div className={styles.scoreVal}>{movie.average_rating}</div>
+              <div className={styles.scoreVal}>{Number(movie.average_rating).toFixed(2)}</div>
               <div className={styles.scoreLabel}>Score</div>
             </div>
           </Link>

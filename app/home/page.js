@@ -6,29 +6,55 @@ import { supabase } from '../../lib/supabase';
 import Navbar from '../../components/Navbar';
 import TrendingRow from '../../components/TrendingRow';
 import TopRatedList from '../../components/TopRatedList';
+import RecommendationsRow from '../../components/RecommendationsRow';
 import ProfileStrip from '../../components/ProfileStrip';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import styles from './page.module.css';
 
 export default function Home() {
   const router = useRouter();
-  const [trending, setTrending]     = useState([]);
-  const [topRated, setTopRated]     = useState([]);
-  const [loading, setLoading]       = useState(true);
+  const [trending, setTrending]         = useState([]);
+  const [topRated, setTopRated]         = useState([]);
+  const [recommendations, setRecs]      = useState([]);
+  const [loading, setLoading]           = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults]       = useState([]);   // live search results
   const [showDrop, setShowDrop]     = useState(false); // whether dropdown is open
   const wrapRef = useRef(null); // ref to detect clicks outside the dropdown
 
-  // fetch trending + top rated on mount
   useEffect(() => {
     async function fetchData() {
-      const { data: trendingData } = await supabase
-        .from('movies').select('*').order('id', { ascending: false }).limit(8);
-      const { data: topRatedData } = await supabase
-        .from('movies').select('*').order('average_rating', { ascending: false }).limit(8);
+      const [{ data: trendingData }, { data: topRatedData }] = await Promise.all([
+        supabase.rpc('get_trending', { lim: 8 }),
+        supabase.rpc('get_top_rated', { lim: 8 }),
+      ]);
+
       setTrending(trendingData || []);
       setTopRated(topRatedData || []);
+
+      // if either table is empty, sync from TMDB in the background
+      if (!trendingData || trendingData.length === 0) {
+        fetch('/api/sync/trending').then(() =>
+          supabase.rpc('get_trending', { lim: 8 }).then(({ data }) => {
+            if (data) setTrending(data);
+          })
+        );
+      }
+      if (!topRatedData || topRatedData.length === 0) {
+        fetch('/api/sync/top-rated').then(() =>
+          supabase.rpc('get_top_rated', { lim: 8 }).then(({ data }) => {
+            if (data) setTopRated(data);
+          })
+        );
+      }
+
+      // fetch recommendations if logged in
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: recsData } = await supabase.rpc('get_recommendations', { uid: session.user.id, lim: 8 });
+        setRecs(recsData || []);
+      }
+
       setLoading(false);
     }
     fetchData();
@@ -130,6 +156,12 @@ export default function Home() {
         <TrendingRow movies={trending} />
         <div className={styles.divider} />
         <TopRatedList movies={topRated} />
+        {recommendations.length > 0 && (
+          <>
+            <div className={styles.divider} />
+            <RecommendationsRow movies={recommendations} />
+          </>
+        )}
         <div className={styles.divider} />
         <ProfileStrip onNavigate={() => router.push('/profile')} />
 

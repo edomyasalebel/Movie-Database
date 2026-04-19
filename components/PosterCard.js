@@ -20,7 +20,7 @@ export default function PosterCard({ movie, rank }) {
         </div>
         <div className={styles.title}>{movie.title}</div>
         <div className={styles.year}>{movie.release_year || movie.year}</div>
-        <div className={styles.stars}>{movie.stars || movie.average_rating}</div>
+        <div className={styles.stars}>{movie.stars || (movie.average_rating ? Number(movie.average_rating).toFixed(2) : '')}</div>
       </div>
     </Link>
   );

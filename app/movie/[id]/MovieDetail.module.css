@@ -446,6 +446,42 @@
 .submitBtn:hover { opacity: 0.88; }
 .submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ── more like this ── */
+.similarSection { padding: 48px 0 24px; }
+
+.similarLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.similarLabel h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+}
+
+.similarBar {
+  width: 3px;
+  height: 20px;
+  background: var(--gold);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.similarRow {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  padding-top: 10px;
+  scrollbar-width: none;
+}
+.similarRow::-webkit-scrollbar { display: none; }
+
 /* ── mobile ── */
 @media (max-width: 768px) {
   .header { flex-direction: column; gap: 24px; }
