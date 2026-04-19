@@ -1,3 +1,5 @@
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
 .section { padding: 0 40px 48px; }
 .label { display: flex; align-items: center; gap: 10px; padding: 36px 0 20px; }
 .label h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--cream); }
@@ -15,7 +17,16 @@
   cursor: pointer;
   transition: background 0.15s;
   text-decoration: none;
+  animation: fadeUp 0.4s ease both;
 }
+.item:nth-child(1) { animation-delay: 0.05s; }
+.item:nth-child(2) { animation-delay: 0.10s; }
+.item:nth-child(3) { animation-delay: 0.15s; }
+.item:nth-child(4) { animation-delay: 0.20s; }
+.item:nth-child(5) { animation-delay: 0.25s; }
+.item:nth-child(6) { animation-delay: 0.30s; }
+.item:nth-child(7) { animation-delay: 0.35s; }
+.item:nth-child(8) { animation-delay: 0.40s; }
 .item:hover { background: var(--surface2); }
 
 .num {

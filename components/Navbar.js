@@ -8,11 +8,13 @@ export default function Navbar({ onLogout }) {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
   const [theme, setTheme] = useState('dark');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') || 'dark';
     setTheme(saved);
     document.documentElement.setAttribute('data-theme', saved);
+    setMounted(true);
   }, []);
 
   function toggleTheme() {
@@ -48,9 +50,11 @@ export default function Navbar({ onLogout }) {
         <button className={styles.navLink} onClick={() => router.push('/browse')}>Browse</button>
         <button className={styles.navLink} onClick={() => router.push('/profile')}>Profile</button>
         {isAdmin && <button className={styles.navLink} onClick={() => router.push('/sql')}>SQL</button>}
-        <button className={styles.themeToggle} onClick={toggleTheme} title="Toggle theme">
-          {theme === 'dark' ? '☀' : '☾'}
-        </button>
+        {mounted && (
+          <button className={styles.themeToggle} onClick={toggleTheme} title="Toggle theme">
+            {theme === 'dark' ? '☀' : '☾'}
+          </button>
+        )}
         <button className={styles.navLinkMuted} onClick={onLogout}>Sign out</button>
         {/* avatar — MD initials matching the monogram */}
         <div className={styles.avatar} onClick={() => router.push('/profile')}>

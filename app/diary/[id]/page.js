@@ -68,7 +68,7 @@ export default function DiaryDetail({ params }) {
     init(); // kick off the whole sequence
   }, [id]); // re-run if the URL id changes (e.g. user navigates to a different diary entry)
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return null;
 
   if (!entry) {
     return (

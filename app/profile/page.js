@@ -59,18 +59,7 @@ export default function Profile() {
     checkAuth();
   }, []); // [] = run once when page first loads
 
-  // ── logo loading screen ──
-  // shown while we wait for the session + profile queries to finish
-  // uses the same MD monogram style as the Navbar badge
-  if (loading) return (
-    <div className={styles.loadingScreen}>
-      <div className={styles.logoMark}>
-        <span className={styles.logoM}>M</span>
-        <span className={styles.logoD}>D</span>
-      </div>
-      <div className={styles.logoWord}>MovieDiary</div>
-    </div>
-  );
+  if (loading) return null;
 
   const TABS = isAdmin ? [...BASE_TABS, 'ADMIN'] : BASE_TABS;
 

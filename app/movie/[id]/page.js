@@ -155,7 +155,11 @@ export default function MovieDetail({ params }) {
     setSubmitting(false);
   }
 
-  if (loading) return <><Navbar onLogout={() => router.push('/')} /><LoadingSpinner /></>;
+  if (loading) return (
+    <div suppressHydrationWarning style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <Navbar onLogout={() => router.push('/')} />
+    </div>
+  );
   if (!movie)  return <main className={styles.notFound}><Navbar onLogout={() => router.push('/')} /><h1>Movie not found</h1></main>;
 
   const director  = movie.credits?.find((c) => c.role_type === 'director');

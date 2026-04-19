@@ -6,7 +6,7 @@
 .row {
   display: flex;
   gap: 16px;
-  padding: 4px 40px 36px;
+  padding: 16px 40px 36px;
   overflow-x: auto;
   scrollbar-width: none;
 }

@@ -38,10 +38,7 @@ export default function BrowsePage() {
 
   if (loading) {
     return (
-      <>
-        <Navbar onLogout={() => router.push('/')} />
-        <main className={styles.container}><LoadingSpinner /></main>
-      </>
+      null
     );
   }
 

@@ -96,14 +96,7 @@ export default function Home() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  if (loading) {
-    return (
-      <>
-        <Navbar onLogout={() => router.push('/')} />
-        <main className={styles.main}><LoadingSpinner /></main>
-      </>
-    );
-  }
+  if (loading) return null;
 
   return (
     <>

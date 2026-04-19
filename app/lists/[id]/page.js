@@ -38,7 +38,7 @@ export default function ListDetail({ params }) {
     fetchList();
   }, [id]);
 
-  if (loading) return <><Navbar onLogout={() => router.push('/')} /><LoadingSpinner /></>;
+  if (loading) return null;
   if (notFound) return (
     <main style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <Navbar onLogout={() => router.push('/')} />
