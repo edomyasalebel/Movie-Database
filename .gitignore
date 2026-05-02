@@ -43,3 +43,6 @@ next-env.d.ts
 #others
 /scripts
 /ideas
+
+# claude
+.claude

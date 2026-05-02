@@ -30,7 +30,7 @@ export default function FavoriteFilms() {
     // fetch up to 5 favorites joined with movie data
     const { data, error } = await supabase
       .from('favorites')
-      .select('movie_id, movies(id, title, release_year, poster_url)')
+      .select('movie_id, movies(id, title, release_year, poster_url, type)')
       .eq('user_id', session.user.id)
       .limit(MAX_FAVORITES);
 
@@ -127,7 +127,7 @@ export default function FavoriteFilms() {
 
   return (
     <div className={styles.wrapper}>
-      <h3 className={styles.title}>Favorite Films</h3>
+      <h3 className={styles.title}>Favorites</h3>
 
       <div className={styles.row}>
         {slots.map((movie, i) =>
@@ -136,7 +136,7 @@ export default function FavoriteFilms() {
             <div
               key={movie.id}
               className={styles.card}
-              onClick={() => router.push(`/movie/${movie.id}`)}
+              onClick={() => router.push(movie.type === 'tv' ? `/tv/${movie.id}` : `/movie/${movie.id}`)}
             >
               {movie.poster_url
                 ? <img src={movie.poster_url} alt={movie.title} className={styles.posterImg} />
@@ -180,7 +180,7 @@ export default function FavoriteFilms() {
           <div className={styles.confirmCard} onClick={(e) => e.stopPropagation()}>
             <p className={styles.confirmTitle}>Remove Favorite?</p>
             <p className={styles.confirmSub}>
-              This film will be removed from your five favorites. You can add it back anytime.
+              This will be removed from your five favorites. You can add it back anytime.
             </p>
             {/* show DB error if the delete was rejected (e.g. missing RLS policy) */}
             {error && <p className={styles.confirmError}>{error}</p>}
@@ -215,14 +215,14 @@ export default function FavoriteFilms() {
           <div className={styles.pickerCard} onClick={(e) => e.stopPropagation()}>
             <button className={styles.closeBtn} onClick={() => { setShowPicker(false); setError(''); }}>✕</button>
             <h3 className={styles.pickerTitle}>Add to Favorites</h3>
-            <p className={styles.pickerSub}>Choose from your watched films</p>
+            <p className={styles.pickerSub}>Choose from your watched titles</p>
             {/* show DB error if the insert was rejected */}
             {error && <p className={styles.confirmError}>{error}</p>}
 
             {watched.length === 0 ? (
               // user hasn't watched anything yet (or all watched movies are already favorites)
               <p className={styles.pickerEmpty}>
-                No watched films available to add.
+                No watched titles available to add.
               </p>
             ) : (
               <div className={styles.pickerList}>

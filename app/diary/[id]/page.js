@@ -1,72 +1,117 @@
 'use client';
 import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation'; // ← needed so router.push('/') works
+import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import LoadingSpinner from '../../../components/LoadingSpinner';
+import Navbar from '../../../components/Navbar';
 import styles from './DiaryDetail.module.css';
 
-
 export default function DiaryDetail({ params }) {
-  // useRouter gives us the router object so we can redirect programmatically
   const router = useRouter();
-
-  // unwrap the diary entry ID from the URL
-  // Next.js 15+ makes params a Promise, so we use use() to read it
   const { id } = use(params);
 
-  const [entry, setEntry]   = useState(null);
-  const [review, setReview] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [entry, setEntry]       = useState(null);
+  const [review, setReview]     = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [userId, setUserId]     = useState(null);
+
+  // edit mode state
+  const [editing, setEditing]         = useState(false);
+  const [editDate, setEditDate]       = useState('');
+  const [editRewatch, setEditRewatch] = useState(false);
+  const [editRating, setEditRating]   = useState('');
+  const [editText, setEditText]       = useState('');
+  const [saving, setSaving]           = useState(false);
+
+  // delete confirmation state
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting]           = useState(false);
 
   useEffect(() => {
-    // we define one async function that does everything in the right ORDER:
-    // 1. check if user is logged in
-    // 2. only if they are → fetch the diary data
     async function init() {
-      // STEP 1: check authentication
-      // getSession() returns the currently logged-in user's session (or null)
       const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { router.push('/'); return; }
 
-      if (!session) {
-        // no session means no one is logged in → send them back to login page
-        router.push('/');
-        return; // stop here — don't try to fetch data for a logged-out user
-      }
+      setUserId(session.user.id);
 
-      // STEP 2: fetch the diary entry (only reached if user IS logged in)
-      // JOIN with movies table so we get poster, title, runtime etc. in one query
       const { data: diaryData, error } = await supabase
         .from('diary')
         .select('*, movies(id, title, release_year, duration_min, country, poster_url, description, average_rating)')
-        .eq('id', id)       // this specific diary entry by URL id
-        .single();          // expect exactly one row back
+        .eq('id', id)
+        .single();
 
-      if (error) {
-        console.error('Error fetching diary entry:', error.message);
-        setLoading(false);
-        return;
-      }
+      if (error) { console.error('Error fetching diary entry:', error.message); setLoading(false); return; }
 
       setEntry(diaryData);
 
-      // STEP 3: fetch the review for this movie by this user
-      // diary and reviews are separate tables — a user can have a diary entry
-      // without a review, so this might come back empty (that's fine)
-      // use session.user.id instead of a hardcoded ID — works for any logged-in user
       const { data: reviewData } = await supabase
         .from('reviews')
         .select('rating, review_text')
-        .eq('movie_id', diaryData.movie_id)  // same movie as the diary entry
-        .eq('user_id', session.user.id)      // the actual logged-in user
+        .eq('movie_id', diaryData.movie_id)
+        .eq('user_id', session.user.id)
         .single();
 
-      // review might not exist — that's ok, we just show "No review yet"
       setReview(reviewData || null);
       setLoading(false);
     }
+    init();
+  }, [id]);
 
-    init(); // kick off the whole sequence
-  }, [id]); // re-run if the URL id changes (e.g. user navigates to a different diary entry)
+  // populate edit form fields when entering edit mode
+  function startEdit() {
+    setEditDate(entry.watched_date);
+    setEditRewatch(entry.rewatch || false);
+    setEditRating(review?.rating ?? '');
+    setEditText(review?.review_text ?? '');
+    setEditing(true);
+  }
+
+  // save changes to diary + review tables
+  async function handleSave() {
+    setSaving(true);
+
+    // update watched_date and rewatch flag in diary table
+    const { error: diaryError } = await supabase
+      .from('diary')
+      .update({ watched_date: editDate, rewatch: editRewatch })
+      .eq('id', id);
+
+    if (diaryError) { console.error(diaryError.message); setSaving(false); return; }
+
+    // upsert review — creates one if it doesn't exist yet
+    if (editRating !== '') {
+      const { error: reviewError } = await supabase
+        .from('reviews')
+        .upsert({
+          user_id:     userId,
+          movie_id:    entry.movie_id,
+          rating:      Number(editRating),
+          review_text: editText.trim() || null,
+        }, { onConflict: 'user_id,movie_id' });
+
+      if (reviewError) { console.error(reviewError.message); setSaving(false); return; }
+    }
+
+    // update local state so UI reflects changes without a full reload
+    setEntry((prev) => ({ ...prev, watched_date: editDate, rewatch: editRewatch }));
+    setReview(editRating !== '' ? { rating: Number(editRating), review_text: editText.trim() || null } : review);
+    setEditing(false);
+    setSaving(false);
+  }
+
+  // delete diary entry + the user's review/rating for this movie, then redirect to profile
+  async function handleDelete() {
+    setDeleting(true);
+    const { error: diaryError } = await supabase.from('diary').delete().eq('id', id);
+    if (diaryError) { console.error(diaryError.message); setDeleting(false); return; }
+
+    // also remove the review so the rating doesn't linger after the diary entry is gone
+    await supabase.from('reviews').delete()
+      .eq('user_id', userId)
+      .eq('movie_id', entry.movie_id);
+
+    router.push('/profile');
+  }
 
   if (loading) return null;
 
@@ -88,6 +133,8 @@ export default function DiaryDetail({ params }) {
 
   return (
     <main className={styles.container}>
+      {/* Added Navbar — was missing from diary detail page */}
+      <Navbar onLogout={() => router.push('/')} />
       <div className={styles.backdrop}>
         <div className={styles.header}>
 
@@ -134,10 +181,76 @@ export default function DiaryDetail({ params }) {
               <p>{review?.review_text || 'No review yet.'}</p>
             </div>
 
-            <div className={styles.actions}>
-              <button className={styles.btn}>Edit Review</button>
-              <button className={styles.btn}>Delete Entry</button>
-            </div>
+            {/* Edit / Delete actions — handlers added, buttons were previously non-functional */}
+            {!editing && !confirmDelete && (
+              <div className={styles.actions}>
+                <button className={styles.btn} onClick={startEdit}>Edit Entry</button>
+                <button className={styles.btnDanger} onClick={() => setConfirmDelete(true)}>Delete Entry</button>
+              </div>
+            )}
+
+            {/* Inline edit form */}
+            {editing && (
+              <div className={styles.editForm}>
+                <div className={styles.editRow}>
+                  <label className={styles.editLabel}>Watched on</label>
+                  <input
+                    type="date"
+                    className={styles.editInput}
+                    value={editDate}
+                    onChange={(e) => setEditDate(e.target.value)}
+                  />
+                </div>
+                <div className={styles.editRow}>
+                  <label className={styles.editLabel}>
+                    <input
+                      type="checkbox"
+                      checked={editRewatch}
+                      onChange={(e) => setEditRewatch(e.target.checked)}
+                    />
+                    {' '}Rewatch
+                  </label>
+                </div>
+                <div className={styles.editRow}>
+                  <label className={styles.editLabel}>Rating (1–5)</label>
+                  <input
+                    type="number"
+                    min="1" max="5"
+                    className={styles.editInput}
+                    value={editRating}
+                    onChange={(e) => setEditRating(e.target.value)}
+                  />
+                </div>
+                <div className={styles.editRow}>
+                  <label className={styles.editLabel}>Review</label>
+                  <textarea
+                    className={styles.editTextarea}
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+                <div className={styles.actions}>
+                  <button className={styles.btn} onClick={handleSave} disabled={saving}>
+                    {saving ? 'Saving…' : 'Save'}
+                  </button>
+                  <button className={styles.btnMuted} onClick={() => setEditing(false)}>Cancel</button>
+                </div>
+              </div>
+            )}
+
+            {/* Delete confirmation step */}
+            {confirmDelete && (
+              <div className={styles.confirmBox}>
+                <p>Delete this diary entry? This cannot be undone.</p>
+                <div className={styles.actions}>
+                  <button className={styles.btnDanger} onClick={handleDelete} disabled={deleting}>
+                    {deleting ? 'Deleting…' : 'Yes, delete'}
+                  </button>
+                  <button className={styles.btnMuted} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

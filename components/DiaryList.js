@@ -15,7 +15,7 @@ export default function DiaryList() {
       // Step 1: fetch diary entries joined with movies (no average_rating needed anymore)
       const { data, error } = await supabase
         .from('diary')
-        .select('id, watched_date, movie_id, movies(id, title, release_year, poster_url)')
+        .select('id, watched_date, movie_id, movies(id, title, release_year, poster_url, type)')
         .eq('user_id', session.user.id)
         .order('watched_date', { ascending: false })
         .limit(5);
@@ -48,8 +48,8 @@ export default function DiaryList() {
           title:     entry.movies.title,
           year:      entry.movies.release_year,
           poster_url: entry.movies.poster_url,
+          type:      entry.movies.type,
           emoji:     '🎬',
-          // use the user's own rating from ratingMap, not the movie's average
           stars: ratingMap[entry.movie_id]
             ? '⭐ ' + ratingMap[entry.movie_id] + ' / 5'
             : '',

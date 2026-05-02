@@ -5,6 +5,7 @@ import { supabase } from '../../../lib/supabase';
 import Navbar from '../../../components/Navbar';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import PosterCard from '../../../components/PosterCard';
+import Link from 'next/link';
 import styles from './MovieDetail.module.css';
 
 export default function MovieDetail({ params }) {
@@ -41,7 +42,7 @@ export default function MovieDetail({ params }) {
       // fetch the movie data with genres and credits
       const { data, error } = await supabase
         .from('movies')
-        .select('*, movie_genres(genres(name)), credits(role_type, character_name, people(name))')
+        .select('*, movie_genres(genres(name)), credits(role_type, character_name, people(id, name))')
         .eq('id', id)
         .single();
 
@@ -287,7 +288,12 @@ export default function MovieDetail({ params }) {
             <div className={styles.castList}>
               {actors.map((a, i) => (
                 <div key={i} className={styles.castItem}>
-                  <div className={styles.castName}>{a.people?.name}</div>
+                  <div className={styles.castName}>
+                    {a.people?.id
+                      ? <Link href={`/person/${a.people.id}`}>{a.people.name}</Link>
+                      : a.people?.name
+                    }
+                  </div>
                   {a.character_name && <div className={styles.castChar}>{a.character_name}</div>}
                 </div>
               ))}
@@ -319,7 +325,7 @@ export default function MovieDetail({ params }) {
 
             {/* title changes based on whether this is a first log or a relog */}
             <h2 className={styles.modalTitle}>
-              {hasLogged ? '↩ Relog Film' : '⭐ Rate & Log'}
+              {hasLogged ? '↩ Relog' : '⭐ Rate & Log'}
             </h2>
             <p className={styles.modalMovie}>{movie.title}</p>
 
@@ -377,7 +383,7 @@ export default function MovieDetail({ params }) {
             {formError && <p className={styles.formError}>{formError}</p>}
 
             <button className={styles.submitBtn} onClick={handleLog} disabled={submitting}>
-              {submitting ? 'Saving...' : hasLogged ? 'Update Log' : 'Log Film'}
+              {submitting ? 'Saving...' : hasLogged ? 'Update Log' : 'Log'}
             </button>
 
           </div>

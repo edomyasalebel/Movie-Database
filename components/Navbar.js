@@ -49,7 +49,8 @@ export default function Navbar({ onLogout }) {
         <button className={styles.navLink} onClick={() => router.push('/home')}>Home</button>
         <button className={styles.navLink} onClick={() => router.push('/browse')}>Browse</button>
         <button className={styles.navLink} onClick={() => router.push('/profile')}>Profile</button>
-        {isAdmin && <button className={styles.navLink} onClick={() => router.push('/sql')}>SQL</button>}
+        {/* Removed admin gate — SQL page is accessible to any logged-in user */}
+        <button className={styles.navLink} onClick={() => router.push('/sql')}>SQL</button>
         {mounted && (
           <button className={styles.themeToggle} onClick={toggleTheme} title="Toggle theme">
             {theme === 'dark' ? '☀' : '☾'}

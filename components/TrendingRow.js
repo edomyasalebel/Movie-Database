@@ -3,12 +3,13 @@
 import PosterCard from './PosterCard';
 import styles from './TrendingRow.module.css';
 
-export default function TrendingRow({ movies = [] }) {
+export default function TrendingRow({ movies = [], label }) {
   return (
     <section className={styles.section}>
       <div className={styles.label}>
         <div className={styles.bar} />
-        <h2>Trending <span>this week</span></h2>
+        {/* label prop lets home page override heading for TV row */}
+        <h2>{label ? label : <>Trending <span>this week</span></>}</h2>
       </div>
       <div className={styles.row}>
         {movies.map((movie, i) => (

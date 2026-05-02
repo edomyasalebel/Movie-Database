@@ -18,7 +18,7 @@ export default function ReviewsList() {
       // we JOIN movies so we get title, poster_url etc. in one query
       const { data, error } = await supabase
         .from('reviews')
-        .select('id, rating, review_text, created_at, movies(id, title, release_year, poster_url)')
+        .select('id, rating, review_text, created_at, movies(id, title, release_year, poster_url, type)')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false }); // newest reviews first
 
@@ -52,9 +52,13 @@ export default function ReviewsList() {
               </div>
 
               <div className={styles.info}>
-                {/* movie title + year */}
                 <div className={styles.movieTitle}>{review.movies.title}</div>
-                <div className={styles.year}>{review.movies.release_year}</div>
+                <div className={styles.year}>
+                  {review.movies.release_year}
+                  <span className={review.movies.type === 'tv' ? styles.tvBadge : styles.filmBadge}>
+                    {review.movies.type === 'tv' ? 'TV' : 'Film'}
+                  </span>
+                </div>
 
                 {/* star rating — e.g. ⭐ 4 / 5 */}
                 <div className={styles.rating}>⭐ {review.rating} / 5</div>

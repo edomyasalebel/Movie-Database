@@ -47,19 +47,46 @@
   background: linear-gradient(160deg, var(--surface2) 0%, transparent 70%);
 }
 
+.avatarArea { margin-bottom: 28px; flex-shrink: 0; position: relative; }
+
 .avatarWrap {
   width: 100px; height: 100px;
   border-radius: 50%;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 0 5px rgba(0,208,255,0.07), 0 12px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 5px rgba(212,175,55,0.08), 0 12px 32px rgba(0,0,0,0.5);
   background: var(--surface3);
   display: flex; align-items: center; justify-content: center;
-  font-size: 38px;
-  margin-bottom: 28px;
-  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  transition: border-color 0.2s;
+}
+.avatarWrap:hover { border-color: var(--cream); }
+.avatarWrap:hover .avatarEdit { opacity: 1; }
+
+.avatarEmoji { font-size: 42px; line-height: 1; }
+
+.avatarEdit {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--cream);
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
 }
 
 .meta { flex: 1; padding-bottom: 28px; }
+
+/* ── editable name ── */
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
 
 .displayName {
   font-family: var(--font-display);
@@ -68,6 +95,105 @@
   color: var(--cream);
   line-height: 1.1;
   letter-spacing: 0.01em;
+}
+
+.nameEditBtn {
+  background: none; border: none;
+  color: var(--muted); font-size: 16px;
+  cursor: pointer; padding: 4px;
+  opacity: 0;
+  transition: color 0.15s, opacity 0.15s;
+  line-height: 1;
+}
+.nameRow:hover .nameEditBtn { opacity: 1; }
+.nameEditBtn:hover { color: var(--gold); }
+
+.nameInput {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--cream);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--gold);
+  outline: none;
+  padding: 0 0 2px;
+  line-height: 1.1;
+  width: 320px;
+  max-width: 100%;
+}
+
+.nameSave {
+  font-size: 12px; font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--bg);
+  background: var(--gold);
+  border: none; border-radius: 6px;
+  padding: 5px 14px; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.nameSave:hover { opacity: 0.85; }
+.nameSave:disabled { opacity: 0.5; }
+
+.nameCancel {
+  font-size: 12px; font-family: var(--font-body);
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.nameCancel:hover { color: var(--cream); }
+
+/* ── avatar picker modal ── */
+.pickerOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.pickerCard {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 28px;
+  width: 360px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+
+.pickerTitle {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pickerGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.pickerBtn {
+  aspect-ratio: 1;
+  font-size: 26px;
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s, background 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pickerBtn:hover {
+  border-color: var(--border2);
+  transform: scale(1.1);
+  background: var(--surface3);
+}
+.pickerBtnActive {
+  border-color: var(--gold);
+  background: rgba(212,175,55,0.12);
 }
 
 .username {

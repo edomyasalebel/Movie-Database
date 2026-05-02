@@ -20,7 +20,12 @@ export default function DiaryEntry({ entry }) {
           </div>
         <div className={styles.info}>
           <div className={styles.entryTitle}>{entry.title}</div>
-          <div className={styles.sub}>{entry.year}</div>
+          <div className={styles.sub}>
+            {entry.year}
+            <span className={entry.type === 'tv' ? styles.tvBadge : styles.filmBadge}>
+              {entry.type === 'tv' ? 'TV' : 'Film'}
+            </span>
+          </div>
         </div>
         <div className={styles.stars}>{entry.stars}</div>
       </div>

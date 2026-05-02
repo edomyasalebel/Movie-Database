@@ -79,3 +79,15 @@
 .submitBtn { background: #c0392b; color: #fff; border: none; border-radius: var(--radius); padding: 13px 28px; font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: background 0.2s; width: fit-content; }
 .submitBtn:hover:not(:disabled) { background: #e74c3c; }
 .submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* manage movies tab */
+.manageWrap { display: flex; flex-direction: column; gap: 24px; }
+.editSection { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--border); padding-top: 24px; }
+.editHeading { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--cream); margin: 0; }
+.manageActions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.deleteBtn { background: none; border: 1px solid #e74c3c; color: #e74c3c; border-radius: var(--radius); padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: all 0.2s; }
+.deleteBtn:hover:not(:disabled) { background: rgba(231,76,60,0.1); }
+.deleteBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.cancelBtn { background: none; border: none; color: var(--muted); font-family: var(--font-body); font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.confirmRow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.confirmText { font-size: 13px; color: #e74c3c; }

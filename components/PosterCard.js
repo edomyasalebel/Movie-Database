@@ -3,11 +3,17 @@ import Link from 'next/link';
 import styles from './PosterCard.module.css';
 
 export default function PosterCard({ movie, rank }) {
+  // route to /tv/[id] for TV shows, /movie/[id] for everything else
+  const href = movie.type === 'tv' ? `/tv/${movie.id}` : `/movie/${movie.id}`;
   return (
-    <Link href={`/movie/${movie.id}`}>
+    <Link href={href}>
       <div className={styles.card}>
         <div className={styles.poster}>
           {rank && <span className={styles.rank}>#{rank}</span>}
+          {movie.type === 'tv'
+            ? <span className={styles.tvBadge}>TV</span>
+            : <span className={styles.filmBadge}>Film</span>
+          }
           {movie.poster_url ? (
             <img
               src={movie.poster_url}

@@ -28,15 +28,13 @@ export default function SQLPage() {
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    async function checkAdmin() {
+    async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession();
+      // Removed admin gate — any logged-in user can access the SQL page (SELECT only)
       if (!session) { router.replace('/'); return; }
-      const { data: profile } = await supabase
-        .from('users').select('admin_access').eq('id', session.user.id).single();
-      if (!profile?.admin_access) { router.replace('/home'); return; }
       setAuthChecked(true);
     }
-    checkAdmin();
+    checkAuth();
   }, []);
 
   // clear results when query is edited
@@ -88,7 +86,8 @@ export default function SQLPage() {
   function loadExample(sql) { setQuery(sql); setRows(null); setError(''); }
 
   function insertTable(table) {
-    const snippet = `SELECT * FROM ${table} LIMIT 10;`;
+    // no semicolon — execute_query RPC doesn't accept it
+    const snippet = `SELECT * FROM ${table} LIMIT 10`;
     setQuery(snippet);
     textareaRef.current?.focus();
   }

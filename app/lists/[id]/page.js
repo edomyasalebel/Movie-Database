@@ -62,7 +62,7 @@ export default function ListDetail({ params }) {
             <div className={styles.meta}>
               <span>by <strong>{list.users?.display_name || list.users?.username}</strong></span>
               <span className={styles.dot}>·</span>
-              <span>{films.length} film{films.length !== 1 ? 's' : ''}</span>
+              <span>{films.length} title{films.length !== 1 ? 's' : ''}</span>
               <span className={styles.dot}>·</span>
               <span>{new Date(list.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
             </div>
@@ -74,7 +74,7 @@ export default function ListDetail({ params }) {
 
         {/* film grid */}
         {films.length === 0 ? (
-          <p className={styles.empty}>No films in this list yet.</p>
+          <p className={styles.empty}>No titles in this list yet.</p>
         ) : (
           <div className={styles.grid}>
             {films.map((movie, i) => (

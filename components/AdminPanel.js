@@ -312,8 +312,230 @@ function AddPersonTab() {
   );
 }
 
+// ── Manage Movies Tab (edit + delete) ─────────────────────────
+function ManageMoviesTab() {
+  const [query, setQuery]           = useState('');
+  const [results, setResults]       = useState([]);
+  const [selected, setSelected]     = useState(null); // movie being edited
+  const [form, setForm]             = useState(null);
+  const [genres, setGenres]         = useState([]);
+  const [pickedGenres, setPickedGenres] = useState([]);
+  const [saving, setSaving]         = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting]     = useState(false);
+  const [success, setSuccess]       = useState('');
+  const [error, setError]           = useState('');
+
+  // load all genres once for the genre picker
+  useEffect(() => {
+    supabase.from('genres').select('id, name').order('name')
+      .then(({ data }) => { if (data) setGenres(data); });
+  }, []);
+
+  // debounced movie search by title
+  useEffect(() => {
+    if (!query.trim()) { setResults([]); return; }
+    const t = setTimeout(async () => {
+      const { data } = await supabase.from('movies')
+        .select('id, title, release_year, type, poster_url')
+        .ilike('title', `%${query}%`)
+        .order('release_year', { ascending: false })
+        .limit(8);
+      setResults(data || []);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // load a movie into the edit form, including its current genres
+  async function selectMovie(movie) {
+    const { data: fullMovie } = await supabase
+      .from('movies')
+      .select('*')
+      .eq('id', movie.id)
+      .single();
+
+    const { data: movieGenres } = await supabase
+      .from('movie_genres')
+      .select('genre_id')
+      .eq('movie_id', movie.id);
+
+    setSelected(fullMovie);
+    setForm({
+      title:          fullMovie.title         ?? '',
+      type:           fullMovie.type          ?? 'movie',
+      release_year:   fullMovie.release_year  ?? '',
+      duration_min:   fullMovie.duration_min  ?? '',
+      lang:           fullMovie.lang          ?? '',
+      country:        fullMovie.country       ?? '',
+      poster_url:     fullMovie.poster_url    ?? '',
+      backdrop_url:   fullMovie.backdrop_url  ?? '',
+      description:    fullMovie.description   ?? '',
+      average_rating: fullMovie.average_rating ?? '',
+    });
+    // pre-check the genres this movie already has
+    setPickedGenres((movieGenres || []).map((g) => g.genre_id));
+    setSuccess(''); setError(''); setConfirmDelete(false);
+    setResults([]); setQuery('');
+  }
+
+  function set(field, value) { setForm((f) => ({ ...f, [field]: value })); }
+  function toggleGenre(id) {
+    setPickedGenres((p) => p.includes(id) ? p.filter((g) => g !== id) : [...p, id]);
+  }
+
+  // save edits — update movies row + replace genre associations
+  async function handleSave() {
+    setSaving(true); setError(''); setSuccess('');
+
+    const { error: updateError } = await supabase.from('movies').update({
+      title:          form.title.trim(),
+      type:           form.type,
+      release_year:   form.release_year   ? Number(form.release_year)   : null,
+      duration_min:   form.duration_min   ? Number(form.duration_min)   : null,
+      lang:           form.lang.trim()    || null,
+      country:        form.country.trim() || null,
+      poster_url:     form.poster_url.trim()    || null,
+      backdrop_url:   form.backdrop_url.trim()  || null,
+      description:    form.description.trim()   || null,
+      average_rating: form.average_rating ? Number(form.average_rating) : null,
+    }).eq('id', selected.id);
+
+    if (updateError) { setError(updateError.message); setSaving(false); return; }
+
+    // replace genre associations: delete old ones then insert new selection
+    await supabase.from('movie_genres').delete().eq('movie_id', selected.id);
+    if (pickedGenres.length > 0)
+      await supabase.from('movie_genres').insert(pickedGenres.map((genre_id) => ({ movie_id: selected.id, genre_id })));
+
+    setSaving(false);
+    setSuccess(`"${form.title}" updated.`);
+  }
+
+  // delete movie — cascades to movie_genres, credits, reviews, diary, watchlist via FK
+  async function handleDelete() {
+    setDeleting(true);
+    const { error: deleteError } = await supabase.from('movies').delete().eq('id', selected.id);
+    if (deleteError) { setError(deleteError.message); setDeleting(false); return; }
+    // reset state after successful delete
+    setSelected(null); setForm(null); setConfirmDelete(false);
+    setSuccess(`Movie deleted.`);
+  }
+
+  return (
+    <div className={styles.manageWrap}>
+
+      {/* search box */}
+      <div className={styles.searchWrap}>
+        <input
+          className={styles.input}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search movies by title..."
+        />
+        {results.length > 0 && (
+          <div className={styles.searchDrop}>
+            {results.map((m) => (
+              <div key={m.id} className={styles.searchResult} onClick={() => selectMovie(m)}>
+                {m.poster_url
+                  ? <img src={m.poster_url} className={styles.dropPhoto} alt={m.title} />
+                  : <div className={styles.dropPhotoFallback}>🎬</div>}
+                <span className={styles.dropName}>{m.title}</span>
+                <span className={styles.creditRole}>{m.release_year} · {m.type}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* edit form — shown once a movie is selected */}
+      {selected && form && (
+        <div className={styles.editSection}>
+          <h3 className={styles.editHeading}>Editing: {selected.title}</h3>
+
+          <div className={styles.row}>
+            <div className={styles.fieldLg}>
+              <label className={styles.label}>Title</label>
+              <input className={styles.input} value={form.title} onChange={(e) => set('title', e.target.value)} />
+            </div>
+            <div className={styles.fieldSm}>
+              <label className={styles.label}>Type</label>
+              <select className={styles.select} value={form.type} onChange={(e) => set('type', e.target.value)}>
+                <option value="movie">Movie</option>
+                <option value="tv">TV</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}><label className={styles.label}>Release Year</label><input className={styles.input} type="number" value={form.release_year} onChange={(e) => set('release_year', e.target.value)} /></div>
+            <div className={styles.field}><label className={styles.label}>Duration (min)</label><input className={styles.input} type="number" value={form.duration_min} onChange={(e) => set('duration_min', e.target.value)} /></div>
+            <div className={styles.field}><label className={styles.label}>Language</label><input className={styles.input} value={form.lang} onChange={(e) => set('lang', e.target.value)} /></div>
+            <div className={styles.field}><label className={styles.label}>Country</label><input className={styles.input} value={form.country} onChange={(e) => set('country', e.target.value)} /></div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.fieldLg}><label className={styles.label}>Poster URL</label><input className={styles.input} value={form.poster_url} onChange={(e) => set('poster_url', e.target.value)} /></div>
+            <div className={styles.fieldLg}><label className={styles.label}>Backdrop URL</label><input className={styles.input} value={form.backdrop_url} onChange={(e) => set('backdrop_url', e.target.value)} /></div>
+          </div>
+
+          {form.poster_url && (
+            <div className={styles.previewRow}>
+              <img src={form.poster_url} alt="poster" className={styles.posterPreview} />
+              {form.backdrop_url && <img src={form.backdrop_url} alt="backdrop" className={styles.backdropPreview} />}
+            </div>
+          )}
+
+          <div className={styles.fieldFull}>
+            <label className={styles.label}>Description</label>
+            <textarea className={styles.textarea} value={form.description} onChange={(e) => set('description', e.target.value)} rows={3} />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Average Rating</label>
+            <input className={styles.input} type="number" value={form.average_rating} onChange={(e) => set('average_rating', e.target.value)} min="0.5" max="5" step="0.1" />
+          </div>
+
+          <div className={styles.fieldFull}>
+            <label className={styles.label}>Genres</label>
+            <div className={styles.chipGrid}>
+              {genres.map((g) => (
+                <button key={g.id} type="button"
+                  className={`${styles.chip} ${pickedGenres.includes(g.id) ? styles.chipActive : ''}`}
+                  onClick={() => toggleGenre(g.id)}>{g.name}</button>
+              ))}
+            </div>
+          </div>
+
+          {error   && <p className={styles.error}>{error}</p>}
+          {success && <p className={styles.success}>{success}</p>}
+
+          <div className={styles.manageActions}>
+            <button className={styles.submitBtn} onClick={handleSave} disabled={saving}>
+              {saving ? 'Saving…' : 'Save Changes'}
+            </button>
+
+            {/* delete with confirmation step */}
+            {!confirmDelete
+              ? <button className={styles.deleteBtn} onClick={() => setConfirmDelete(true)}>Delete Movie</button>
+              : (
+                <div className={styles.confirmRow}>
+                  <span className={styles.confirmText}>Are you sure? This cannot be undone.</span>
+                  <button className={styles.deleteBtn} onClick={handleDelete} disabled={deleting}>
+                    {deleting ? 'Deleting…' : 'Yes, delete'}
+                  </button>
+                  <button className={styles.cancelBtn} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                </div>
+              )
+            }
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main AdminPanel ────────────────────────────────────────────
-const ADMIN_TABS = ['Add Movie', 'People'];
+const ADMIN_TABS = ['Add Movie', 'Manage Movies', 'People'];
 
 export default function AdminPanel() {
   const [tab, setTab] = useState('Add Movie');
@@ -333,8 +555,9 @@ export default function AdminPanel() {
         ))}
       </div>
 
-      {tab === 'Add Movie' && <AddMovieTab />}
-      {tab === 'People'    && <AddPersonTab />}
+      {tab === 'Add Movie'     && <AddMovieTab />}
+      {tab === 'Manage Movies' && <ManageMoviesTab />}
+      {tab === 'People'        && <AddPersonTab />}
     </div>
   );
 }

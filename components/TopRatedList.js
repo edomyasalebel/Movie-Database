@@ -2,16 +2,17 @@
 import Link from 'next/link';
 import styles from './TopRatedList.module.css';
 
-export default function TopRatedList({ movies = [] }) {
+export default function TopRatedList({ movies = [], label }) {
   return (
     <section className={styles.section}>
       <div className={styles.label}>
         <div className={styles.bar} />
-        <h2>Top Rated <span>all time</span></h2>
+        {/* label prop lets home page override the heading for TV rows */}
+        <h2>{label || <>Top Rated <span>all time</span></>}</h2>
       </div>
       <div className={styles.list}>
         {movies.map((movie, i) => (
-          <Link key={movie.id} href={`/movie/${movie.id}`} className={styles.item}>
+          <Link key={movie.id} href={movie.type === 'tv' ? `/tv/${movie.id}` : `/movie/${movie.id}`} className={styles.item}>
             <div className={styles.num}>{i + 1}</div>
             <div className={styles.thumb}>
               {movie.poster_url
@@ -24,8 +25,8 @@ export default function TopRatedList({ movies = [] }) {
               <div className={styles.meta}>{movie.release_year} · {movie.country}</div>
             </div>
             <div className={styles.score}>
-              <div className={styles.scoreVal}>{Number(movie.average_rating).toFixed(2)}</div>
-              <div className={styles.scoreLabel}>Score</div>
+              <span className={styles.scoreStar}>★</span>
+              <span className={styles.scoreVal}>{Number(movie.average_rating).toFixed(2)}</span>
             </div>
           </Link>
         ))}

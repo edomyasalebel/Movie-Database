@@ -114,6 +114,118 @@
   gap: 24px;
 }
 
+/* ── type toggle ── */
+.typeToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.typeBtn {
+  padding: 6px 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+
+.typeBtn + .typeBtn {
+  border-left: 1px solid var(--border);
+}
+
+.typeBtn:hover { color: var(--cream); }
+
+.typeBtnActive {
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 500;
+}
+
+/* ── sort row ── */
+.sortRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sortSelect {
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sortSelect:focus { border-color: var(--gold); }
+
+/* ── year range ── */
+.yearRange {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.yearSep {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.yearInput {
+  width: 72px;
+  padding: 6px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
+}
+
+.yearInput::-webkit-outer-spin-button,
+.yearInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.yearInput:focus { border-color: var(--gold); }
+.yearInput::placeholder { color: var(--muted); font-weight: 300; }
+
+/* ── load more ── */
+.loadMoreWrap {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 20px;
+}
+
+.loadMore {
+  padding: 10px 32px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.loadMore:hover { background: var(--gold); color: var(--bg); }
+.loadMore:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* ── empty state ── */
 .noResults {
   text-align: center;

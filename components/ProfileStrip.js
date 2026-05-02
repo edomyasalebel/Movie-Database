@@ -50,7 +50,7 @@ export default function ProfileStrip({ onNavigate }) {
         <div className={styles.info}>
           {/* displayName starts as '' so it shows nothing until the fetch completes */}
           <div className={styles.name}>{displayName}</div>
-          <div className={styles.sub}>{stats.films} films · {stats.reviews} reviews · {stats.lists} lists</div>
+          <div className={styles.sub}>{stats.films} logged · {stats.reviews} reviews · {stats.lists} lists</div>
         </div>
         <span className={styles.arrow}>›</span>
       </div>

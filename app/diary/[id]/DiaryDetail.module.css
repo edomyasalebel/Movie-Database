@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
   background: var(--bg);
-  padding-top: 20px;
+  padding-top: 80px;
 }
 
 .backdrop {
@@ -146,6 +146,98 @@
 
 .btn:hover {
   text-decoration-color: var(--gold);
+}
+
+/* Added for edit/delete functionality */
+.btnDanger {
+  background: none;
+  border: none;
+  color: #e05c5c;
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: all 0.2s;
+}
+.btnDanger:hover { text-decoration-color: #e05c5c; }
+
+.btnMuted {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: all 0.2s;
+}
+.btnMuted:hover { text-decoration-color: var(--muted); }
+
+.editForm {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.editRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editLabel {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editInput {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.editTextarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 8px 12px;
+  width: 100%;
+  resize: vertical;
+}
+
+.confirmBox {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #e05c5c44;
+  border-radius: var(--radius);
+  background: var(--surface2);
+  max-width: 400px;
+}
+
+.confirmBox p {
+  font-size: 14px;
+  color: var(--cream);
+  margin-bottom: 16px;
 }
 
 .notFound {

@@ -1,4 +1,15 @@
-@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: translateY(24px); }
+  60%  { opacity: 1; transform: translateY(-6px); }
+  80%  { transform: translateY(3px); }
+  100% { transform: translateY(0); }
+}
+@keyframes backdropSlide {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
 
 .main {
   padding-top: 58px;
@@ -7,59 +18,138 @@
   animation: fadeUp 0.5s ease both;
 }
 
-/* ── hero search ── */
-.searchHero {
-  padding: 56px 40px 48px;
+/* ── hero carousel ── */
+.hero {
+  position: relative;
+  height: 580px;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
+  align-items: flex-end;
 }
 
-.heroHeadline {
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  animation: backdropSlide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.heroBackdropImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: saturate(0.7) brightness(0.55);
+}
+
+/* vintage vignette — dark edges, extended bottom fade for smooth transition */
+.heroVignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(10, 9, 8, 0.6) 100%),
+    linear-gradient(to top, rgba(10, 9, 8, 1) 0%, rgba(10, 9, 8, 0.85) 25%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 9, 8, 0.5) 0%, transparent 25%);
+}
+
+/* title + description overlay */
+.heroInfo {
+  position: absolute;
+  bottom: 44px;
+  left: 48px;
+  max-width: 540px;
+  z-index: 2;
+}
+
+.heroBadge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--gold);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.heroTitle {
   font-family: var(--font-display);
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 300;
   color: var(--cream);
-  line-height: 1.15;
-  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  animation: bounceIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
 }
 
-.heroHeadline em {
-  font-style: italic;
-  color: var(--gold);
-}
-
-.heroSub {
+.heroDesc {
   font-size: 14px;
-  color: var(--muted);
+  color: rgba(240, 235, 228, 0.75);
+  line-height: 1.65;
   font-weight: 300;
-  margin-top: -8px;
+  margin: 0 0 20px;
+  animation: bounceIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+/* dot indicators */
+.heroDots {
+  display: flex;
+  gap: 6px;
+  animation: bounceIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+}
+
+.heroDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.heroDotActive {
+  background: var(--gold);
+  transform: scale(1.4);
+}
+
+/* search sits below the hero, pulled up into the gradient fade zone */
+.heroSearch {
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  margin-top: -44px;
+  position: relative;
+  z-index: 10;
 }
 
 .searchWrap {
   position: relative;
   width: 100%;
-  max-width: 620px;
+  max-width: 640px;
 }
 
 .searchInput {
   width: 100%;
-  padding: 14px 22px;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
+  padding: 16px 24px;
+  background: rgba(18, 16, 14, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 40px;
   color: var(--cream);
   font-family: var(--font-body);
   font-size: 15px;
   outline: none;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.06) inset;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .searchInput:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(0, 208, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 3px rgba(212,175,55,0.15);
 }
 
 .searchInput::placeholder {
@@ -70,33 +160,36 @@
 /* live results dropdown */
 .dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: 16px;
-  z-index: 100;
+  background: rgba(18, 16, 14, 0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  z-index: 200;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05) inset;
+  backdrop-filter: blur(20px);
+  animation: fadeUp 0.18s ease both;
 }
 
 .dropItem {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 10px 16px;
+  padding: 11px 18px;
   transition: background 0.15s;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.dropItem:hover { background: var(--surface3); }
-.dropItem + .dropItem { border-top: 1px solid var(--border); }
+.dropItem:hover { background: rgba(255,255,255,0.05); }
+.dropItem + .dropItem { border-top: 1px solid rgba(255,255,255,0.06); }
 
 .dropThumb {
-  width: 34px;
-  height: 50px;
-  border-radius: 6px;
+  width: 36px;
+  height: 52px;
+  border-radius: 8px;
   background: var(--surface);
   flex-shrink: 0;
   overflow: hidden;
@@ -118,11 +211,74 @@
   text-overflow: ellipsis;
 }
 
-.dropYear { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.dropMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.badgeFilm, .badgeTv {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.badgeFilm {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+}
+
+.badgeTv {
+  background: rgba(212,175,55,0.18);
+  color: var(--gold);
+}
+
+.dropSeeAll {
+  display: block;
+  text-align: center;
+  padding: 10px 18px;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  transition: color 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.dropSeeAll:hover { color: var(--gold); }
+
+/* gradient bleed below search, dissolves hero into content */
+.heroBleed {
+  height: 64px;
+  margin-top: -64px;
+  position: relative;
+  z-index: 3;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
+  pointer-events: none;
+}
 
 /* ── section divider ── */
 .divider {
   height: 1px;
   background: var(--border);
   margin: 0 40px;
+}
+
+/* ── side-by-side top rated (movies + TV) ── */
+.topRatedRow {
+  display: flex;
+  gap: 0;
+}
+.topRatedRow > * {
+  flex: 1;
+  min-width: 0;
+}
+.topRatedRow > * + * {
+  border-left: 1px solid var(--border);
 }

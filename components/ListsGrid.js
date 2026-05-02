@@ -166,7 +166,7 @@ export default function ListsGrid() {
               <div className={styles.listHeader}>
                 <div className={styles.listMeta}>
                   <Link href={`/lists/${list.id}`} className={styles.listTitle}>{list.title}</Link>
-                  <span className={styles.listCount}>{list.films.length} film{list.films.length !== 1 ? 's' : ''}</span>
+                  <span className={styles.listCount}>{list.films.length} title{list.films.length !== 1 ? 's' : ''}</span>
                   {list.description && <p className={styles.listDesc}>{list.description}</p>}
                 </div>
                 <div className={styles.listActions}>
@@ -183,7 +183,7 @@ export default function ListsGrid() {
                   ))}
                 </div>
               ) : (
-                <p className={styles.shelfEmpty}>No films added yet.</p>
+                <p className={styles.shelfEmpty}>No titles added yet.</p>
               )}
 
             </div>
@@ -218,7 +218,7 @@ export default function ListsGrid() {
             />
 
             <label className={styles.fieldLabel}>
-              Films <span className={styles.optional}>(optional)</span>
+              Titles <span className={styles.optional}>(optional)</span>
             </label>
 
             {pickedMovies.length > 0 && (
@@ -242,7 +242,7 @@ export default function ListsGrid() {
                 className={styles.input}
                 value={movieQuery}
                 onChange={(e) => setMovieQuery(e.target.value)}
-                placeholder="Search for a film..."
+                placeholder="Search for a title..."
               />
               {movieResults.length > 0 && (
                 <div className={styles.searchDrop}>
