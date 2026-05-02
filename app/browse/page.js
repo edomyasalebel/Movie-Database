@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
@@ -10,6 +10,10 @@ import styles from './page.module.css';
 const PAGE_SIZE = 48;
 
 export default function BrowsePage() {
+  return <Suspense><BrowseContent /></Suspense>;
+}
+
+function BrowseContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
