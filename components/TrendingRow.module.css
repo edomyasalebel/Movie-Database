@@ -1,13 +1,19 @@
 .section { }
-.label { display: flex; align-items: center; gap: 10px; padding: 36px 40px 20px; }
-.label h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--cream); }
-.label h2 span { font-size: 14px; color: var(--muted); font-weight: 300; margin-left: 6px; }
-.bar { width: 3px; height: 22px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+.label { display: flex; align-items: center; gap: 10px; padding: 40px 40px 18px; }
+.label h2 { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--cream); }
+.label h2 span { font-size: 13px; color: var(--muted); font-weight: 300; margin-left: 6px; }
+.bar { width: 3px; height: 20px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
 .row {
   display: flex;
-  gap: 16px;
-  padding: 16px 40px 36px;
+  gap: 18px;
+  padding: 12px 40px 40px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .row::-webkit-scrollbar { display: none; }
+
+@media (max-width: 768px) {
+  .label { padding: 28px 16px 14px; }
+  .label h2 { font-size: 19px; }
+  .row { padding: 10px 16px 28px; gap: 12px; }
+}

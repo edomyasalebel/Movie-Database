@@ -148,6 +148,9 @@ export default function MovieDetail({ params }) {
 
     if (reviewError) { setFormError(reviewError.message); setSubmitting(false); return; }
 
+    // remove from watchlist automatically — if they've watched it, no need to keep it queued
+    await supabase.from('watchlist').delete().eq('user_id', session.user.id).eq('movie_id', Number(id));
+
     // update local state so button flips to "Relog" immediately without a page reload
     setExistingLog({ watched_date: watchedDate, rewatch });
     setExistingReview({ rating, review_text: reviewText.trim() || null });

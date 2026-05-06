@@ -19,9 +19,13 @@ export default function PosterCard({ movie, rank }) {
               src={movie.poster_url}
               alt={movie.title}
               className={styles.image}
+              loading="lazy"
+              decoding="async"
             />
           ) : (
-            <span>{movie.emoji}</span>
+            <div className={styles.placeholder}>
+              <span className={styles.placeholderLogo}>MD</span>
+            </div>
           )}
         </div>
         <div className={styles.title}>{movie.title}</div>

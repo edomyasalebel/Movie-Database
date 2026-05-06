@@ -1,71 +1,82 @@
-.container {
+/* ── page shell ── */
+.page {
   min-height: 100vh;
   background: var(--bg);
-  padding-top: 80px;
 }
 
-.backdrop {
-  max-width: 1200px;
+/* ── hero backdrop ── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+}
+
+.heroImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(18px) brightness(0.35) saturate(0.8);
+  transform: scale(1.08); /* hide blur edges */
+}
+
+/* fallback colour when there's no poster */
+.heroFallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #1a1a1a 0%, #0f0f0f 100%);
+}
+
+/* gradient that melts hero into page background */
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,15,15,0.2) 0%,
+    rgba(15,15,15,0.6) 55%,
+    var(--bg) 100%
+  );
+}
+
+/* ── content layer — sits on top of hero and pulls up ── */
+.content {
+  position: relative;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 0 32px 80px;
+  margin-top: -200px; /* overlap hero */
 }
 
-.review {
-  margin-top: 32px;
-  padding: 20px;
-  border-top: 2px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface1);
-}
-
-.reviewLabel {
-  font-size: 13px;
-  color: var(--muted);
-  text-transform: lowercase;
-  letter-spacing: 0.5px;
-}
-.label {
-  font-size: 13px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.label + .date {
-  color: var(--cream);
-  margin-left: 8px;
-  font-size: 13px;
-  font-style: bold;
-}
-
-.review p {
-  margin-top: 16px;
-  font-size: 15px;
-  color: var(--cream);
-  line-height: 1.7;
-  font-style: italic;
-}
-
-.header {
+/* ── top section: poster + info side-by-side ── */
+.top {
   display: flex;
-  gap: 40px;
+  gap: 36px;
   align-items: flex-start;
 }
 
+/* ── poster ── */
 .poster {
   flex-shrink: 0;
-  width: 220px;
-  height: 330px;
+  width: 200px;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
   background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 80px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transition: transform 0.25s, box-shadow 0.25s;
-  overflow: hidden;
+  font-size: 64px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.poster:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 32px 72px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,169,110,0.15);
 }
 
 .posterImage {
@@ -74,119 +85,241 @@
   object-fit: cover;
 }
 
-.poster:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(201, 169, 110, 0.15);
-}
-
-.posterEmoji {
-  display: block;
-}
-
+/* ── info column ── */
 .info {
   flex: 1;
-  color: var(--cream);
+  min-width: 0;
+  padding-top: 120px; /* push down so title sits at hero bottom */
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 20px;
+  letter-spacing: 0.3px;
+  transition: color 0.15s;
+}
+.backLink:hover { color: var(--cream); }
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: 48px;
+  font-size: 40px;
+  font-weight: 400;
   line-height: 1.1;
-  margin-bottom: 12px;
   color: var(--cream);
+  margin: 0;
+}
+
+.rewatchBadge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  background: rgba(201,169,110,0.15);
+  color: var(--star);
+  border: 1px solid rgba(201,169,110,0.3);
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 13px;
   color: var(--muted);
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-.rating {
-  margin-bottom: 24px;
-}
-
-.stars {
-  font-size: 12px;
-  color: #c9a96e;
-  letter-spacing: 2px;
-}
+.metaDot { color: var(--border2); }
 
 .description {
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.7;
   color: var(--muted);
-  max-width: 600px;
-  margin-bottom: 32px;
+  max-width: 520px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+/* ── log card — date + rating ── */
+.logCard {
+  margin-top: 40px;
+  padding: 20px 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.logField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted2);
+}
+
+.logValue {
+  font-size: 15px;
+  color: var(--cream);
+  font-weight: 500;
+}
+
+.ratingStars {
+  color: var(--star);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ── review card ── */
+.reviewCard {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.reviewCardLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted2);
+  margin-bottom: 12px;
+}
+
+.reviewText {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--cream);
+  font-style: italic;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.noReview {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+  font-style: normal;
+}
+
+/* ── action buttons ── */
 .actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  margin-top: 24px;
   flex-wrap: wrap;
 }
 
 .btn {
-  background: none;
-  border: none;
-  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--cream);
   font-family: var(--font-body);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 13px;
   font-weight: 500;
-  padding: 0;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-decoration: none;
 }
 
 .btn:hover {
-  text-decoration-color: var(--gold);
+  border-color: var(--star);
+  background: var(--surface3);
 }
 
-/* Added for edit/delete functionality */
 .btnDanger {
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(224,92,92,0.3);
+  background: var(--surface2);
   color: #e05c5c;
   font-family: var(--font-body);
-  font-size: 14px;
-  cursor: pointer;
+  font-size: 13px;
   font-weight: 500;
-  padding: 0;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
-  transition: all 0.2s;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 }
-.btnDanger:hover { text-decoration-color: #e05c5c; }
+
+.btnDanger:hover {
+  border-color: #e05c5c;
+  background: rgba(224,92,92,0.08);
+}
 
 .btnMuted {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
   background: none;
-  border: none;
   color: var(--muted);
   font-family: var(--font-body);
-  font-size: 14px;
-  cursor: pointer;
+  font-size: 13px;
   font-weight: 500;
-  padding: 0;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
-  transition: all 0.2s;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
 }
-.btnMuted:hover { text-decoration-color: var(--muted); }
 
-.editForm {
-  margin-top: 24px;
+.btnMuted:hover { border-color: var(--border2); color: var(--cream); }
+
+/* ── edit form ── */
+.editCard {
+  margin-top: 20px;
+  padding: 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 480px;
+  gap: 18px;
+  max-width: 560px;
+}
+
+.editCardLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted2);
+  margin-bottom: 4px;
 }
 
 .editRow {
@@ -196,50 +329,73 @@
 }
 
 .editLabel {
-  font-size: 12px;
-  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  color: var(--muted);
 }
 
 .editInput {
-  background: var(--surface2);
+  background: var(--surface3);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 8px;
   color: var(--cream);
   font-family: var(--font-body);
   font-size: 14px;
-  padding: 8px 12px;
+  padding: 9px 12px;
   width: 100%;
+  transition: border-color 0.15s;
+  outline: none;
+  color-scheme: dark;
 }
+
+.editInput:focus { border-color: var(--border2); }
 
 .editTextarea {
-  background: var(--surface2);
+  background: var(--surface3);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 8px;
   color: var(--cream);
   font-family: var(--font-body);
   font-size: 14px;
-  padding: 8px 12px;
+  padding: 9px 12px;
   width: 100%;
   resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.15s;
+  outline: none;
 }
 
-.confirmBox {
-  margin-top: 24px;
-  padding: 16px;
-  border: 1px solid #e05c5c44;
-  border-radius: var(--radius);
-  background: var(--surface2);
-  max-width: 400px;
-}
+.editTextarea:focus { border-color: var(--border2); }
 
-.confirmBox p {
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
   color: var(--cream);
-  margin-bottom: 16px;
+  cursor: pointer;
 }
 
+/* ── delete confirm ── */
+.confirmCard {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: rgba(224,92,92,0.05);
+  border: 1px solid rgba(224,92,92,0.25);
+  border-radius: var(--radius-lg);
+  max-width: 440px;
+}
+
+.confirmCard p {
+  font-size: 14px;
+  color: var(--cream);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+/* ── not-found ── */
 .notFound {
   min-height: 100vh;
   display: flex;
@@ -249,34 +405,32 @@
   background: var(--bg);
   color: var(--cream);
   text-align: center;
+  gap: 16px;
 }
 
-.notFound h1 {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
+.notFound h1 { font-family: var(--font-display); font-size: 32px; font-weight: 400; margin: 0; }
+.notFound p  { font-size: 14px; color: var(--muted); margin: 0; }
 
+/* ── responsive ── */
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 24px;
+  .hero { height: 240px; }
+
+  .content {
+    padding: 0 16px 60px;
+    margin-top: -140px;
   }
 
-  .title {
-    font-size: 32px;
+  .top {
+    flex-direction: column;
+    gap: 20px;
   }
 
   .poster {
-    width: 160px;
-    height: 240px;
-    font-size: 60px;
+    width: 140px;
+    height: 210px;
   }
 
-  .actions {
-    flex-direction: column;
-  }
+  .info { padding-top: 0; }
 
-  .btn {
-    width: 100%;
-  }
+  .title { font-size: 28px; }
 }

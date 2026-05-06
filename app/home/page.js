@@ -38,9 +38,9 @@ export default function Home() {
         { data: topRatedTvData },
       ] = await Promise.all([
         supabase.rpc('get_trending',    { lim: 8 }),
-        supabase.rpc('get_top_rated',   { lim: 8 }),
+        supabase.rpc('get_top_rated',   { lim: 10 }),
         supabase.rpc('get_trending_tv', { lim: 8 }),
-        supabase.rpc('get_top_rated_tv',{ lim: 8 }),
+        supabase.rpc('get_top_rated_tv',{ lim: 10 }),
       ]);
 
       setTrending(trendingData     || []);
@@ -58,7 +58,7 @@ export default function Home() {
       }
       if (!topRatedData || topRatedData.length === 0) {
         fetch('/api/sync/top-rated').then(() =>
-          supabase.rpc('get_top_rated', { lim: 8 }).then(({ data }) => {
+          supabase.rpc('get_top_rated', { lim: 10 }).then(({ data }) => {
             if (data) setTopRated(data);
           })
         );
@@ -74,7 +74,7 @@ export default function Home() {
       }
       if (!topRatedTvData || topRatedTvData.length === 0) {
         fetch('/api/sync/top-rated-tv').then(() =>
-          supabase.rpc('get_top_rated_tv', { lim: 8 }).then(({ data }) => {
+          supabase.rpc('get_top_rated_tv', { lim: 10 }).then(({ data }) => {
             if (data) setTopRatedTv(data);
           })
         );
@@ -90,6 +90,18 @@ export default function Home() {
       setLoading(false);
     }
     fetchData();
+
+    // re-fetch recommendations whenever the tab becomes visible again
+    // so navigating back from a movie page always shows fresh results
+    async function refreshRecs() {
+      if (document.visibilityState !== 'visible') return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data: recsData } = await supabase.rpc('get_recommendations', { uid: session.user.id, lim: 8 });
+      setRecs(recsData || []);
+    }
+    document.addEventListener('visibilitychange', refreshRecs);
+    return () => document.removeEventListener('visibilitychange', refreshRecs);
   }, []);
 
   // build hero pool once trending data loads — tag type since RPC doesn't return it
@@ -147,7 +159,11 @@ export default function Home() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  if (loading) return null;
+  if (loading) return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <Navbar onLogout={() => router.push('/')} />
+    </div>
+  );
 
   return (
     <>
@@ -268,14 +284,12 @@ export default function Home() {
           </>
         )}
 
-        {/* Top rated movies + TV side by side */}
+        {/* Top rated — tabbed movies / TV */}
         <div className={styles.divider} />
-        <div className={styles.topRatedRow}>
-          <TopRatedList movies={topRated.map((m) => ({ ...m, type: 'movie' }))} label="Top Rated Movies" />
-          {topRatedTv.length > 0 && (
-            <TopRatedList movies={topRatedTv.map((m) => ({ ...m, type: 'tv' }))} label="Top Rated TV" />
-          )}
-        </div>
+        <TopRatedList
+          movies={topRated.map((m) => ({ ...m, type: 'movie' }))}
+          tvShows={topRatedTv.map((m) => ({ ...m, type: 'tv' }))}
+        />
 
         {recommendations.length > 0 && (
           <>

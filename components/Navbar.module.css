@@ -115,3 +115,10 @@
   color: var(--gold);
   line-height: 1;
 }
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 16px; }
+  .logo { font-size: 17px; }
+  .navLink, .navLinkMuted { font-size: 12px; padding: 6px 5px; }
+  .navRight { gap: 4px; }
+}

@@ -28,7 +28,7 @@
 .entryTitle { font-size: 15px; font-weight: 500; color: var(--cream); transition: color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
-.stars { font-size: 13px; color: var(--gold); flex-shrink: 0; letter-spacing: 1px; }
+.stars { font-size: 13px; color: var(--star); flex-shrink: 0; letter-spacing: 1px; }
 
 .tvBadge, .filmBadge {
   display: inline-block;

@@ -1,34 +1,38 @@
 'use client';
-import Link from 'next/link';
+import { useState } from 'react';
+import PosterCard from './PosterCard';
 import styles from './TopRatedList.module.css';
 
-export default function TopRatedList({ movies = [], label }) {
+export default function TopRatedList({ movies = [], tvShows = [] }) {
+  const [tab, setTab] = useState('movies');
+  const items = tab === 'movies' ? movies : tvShows;
+
   return (
     <section className={styles.section}>
-      <div className={styles.label}>
-        <div className={styles.bar} />
-        {/* label prop lets home page override the heading for TV rows */}
-        <h2>{label || <>Top Rated <span>all time</span></>}</h2>
+      <div className={styles.header}>
+        <div className={styles.titleRow}>
+          <div className={styles.bar} />
+          <h2 className={styles.title}>Top Rated</h2>
+        </div>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${tab === 'movies' ? styles.tabActive : ''}`}
+            onClick={() => setTab('movies')}
+          >
+            Movies
+          </button>
+          <button
+            className={`${styles.tab} ${tab === 'tv' ? styles.tabActive : ''}`}
+            onClick={() => setTab('tv')}
+          >
+            TV Shows
+          </button>
+        </div>
       </div>
-      <div className={styles.list}>
-        {movies.map((movie, i) => (
-          <Link key={movie.id} href={movie.type === 'tv' ? `/tv/${movie.id}` : `/movie/${movie.id}`} className={styles.item}>
-            <div className={styles.num}>{i + 1}</div>
-            <div className={styles.thumb}>
-              {movie.poster_url
-                ? <img src={movie.poster_url} alt={movie.title} className={styles.thumbImage} />
-                : '🎬'
-              }
-            </div>
-            <div className={styles.info}>
-              <div className={styles.title}>{movie.title}</div>
-              <div className={styles.meta}>{movie.release_year} · {movie.country}</div>
-            </div>
-            <div className={styles.score}>
-              <span className={styles.scoreStar}>★</span>
-              <span className={styles.scoreVal}>{Number(movie.average_rating).toFixed(2)}</span>
-            </div>
-          </Link>
+
+      <div className={styles.row}>
+        {items.map((movie, i) => (
+          <PosterCard key={movie.id} movie={movie} rank={i + 1} />
         ))}
       </div>
     </section>

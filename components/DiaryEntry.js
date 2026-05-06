@@ -15,8 +15,8 @@ export default function DiaryEntry({ entry }) {
         </div>
         <div className={styles.thumb}>
           {entry.poster_url
-                   ? <img src={entry.poster_url} alt={entry.title} className={styles.thumbImage} />
-                   : entry.emoji}
+                   ? <img src={entry.poster_url} alt={entry.title} className={styles.thumbImage} loading="lazy" decoding="async" />
+                   : <span style={{ fontFamily: 'var(--font-display)', fontSize: '11px', color: 'var(--border2)' }}>MD</span>}
           </div>
         <div className={styles.info}>
           <div className={styles.entryTitle}>{entry.title}</div>

@@ -6,6 +6,7 @@ import styles from './ProfileStrip.module.css';
 export default function ProfileStrip({ onNavigate }) {
   // this will hold the display name once we fetch it from the DB
   const [displayName, setDisplayName] = useState('');
+  const [avatar, setAvatar] = useState('🎬');
   const [stats, setStats] = useState({ films: 0, reviews: 0, lists: 0, watchlist: 0 });
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function ProfileStrip({ onNavigate }) {
       // .single() → we expect exactly one row back
       const { data: profile } = await supabase
         .from('users')
-        .select('display_name')
+        .select('display_name, avatar')
         .eq('id', session.user.id)
         .single();
 
@@ -32,8 +33,11 @@ export default function ProfileStrip({ onNavigate }) {
       const { count: watchlistCount} = await supabase.from('watchlist').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
 
       // Step 3: if we got a profile, save the display_name to state
-      if (profile) setDisplayName(profile.display_name);
-      if(profile) setStats({ films: filmCount, reviews: reviewCount, lists: listCount, watchlist: watchlistCount });
+      if (profile) {
+        setDisplayName(profile.display_name);
+        if (profile.avatar) setAvatar(profile.avatar);
+        setStats({ films: filmCount, reviews: reviewCount, lists: listCount, watchlist: watchlistCount });
+      }
     }
 
     fetchUser();
@@ -46,7 +50,7 @@ export default function ProfileStrip({ onNavigate }) {
         <h2>Your Profile</h2>
       </div>
       <div className={styles.strip} onClick={onNavigate}>
-        <div className={styles.avatar}>🎬</div>
+        <div className={styles.avatar}>{avatar}</div>
         <div className={styles.info}>
           {/* displayName starts as '' so it shows nothing until the fetch completes */}
           <div className={styles.name}>{displayName}</div>

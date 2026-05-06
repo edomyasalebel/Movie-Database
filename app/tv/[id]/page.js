@@ -169,6 +169,9 @@ export default function TvDetail({ params }) {
 
     if (error) { console.error('Failed to save watching progress:', error.message); return; }
 
+    // remove from watchlist — they've started watching it
+    await supabase.from('watchlist').delete().eq('user_id', uid).eq('movie_id', mid);
+
     setWatching(data);
     setShowProgressForm(false);
   }
@@ -192,6 +195,9 @@ export default function TvDetail({ params }) {
     }).select().single();
 
     if (error) { console.error('Failed to mark completed:', error.message); return; }
+
+    // remove from watchlist — they've completed it
+    await supabase.from('watchlist').delete().eq('user_id', uid).eq('movie_id', mid);
 
     setWatching(data);
     setShowProgressForm(false);

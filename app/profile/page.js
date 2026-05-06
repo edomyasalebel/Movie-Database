@@ -32,6 +32,7 @@ export default function Profile() {
   const [loading, setLoading]     = useState(true);
   const [avatar, setAvatar]       = useState('🎬');
   const [userId, setUserId]       = useState(null);
+  const [bannerUrl, setBannerUrl] = useState(null);
 
   // display name editing
   const [editingName, setEditingName]   = useState(false);
@@ -78,6 +79,15 @@ export default function Profile() {
         setMemberSince(new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
       }
 
+      // grab first favorite's backdrop/poster for the profile banner
+      const { data: bannerData } = await supabase
+        .from('favorites')
+        .select('movies(backdrop_url, poster_url)')
+        .eq('user_id', session.user.id)
+        .limit(1)
+        .maybeSingle();
+      setBannerUrl(bannerData?.movies?.backdrop_url || bannerData?.movies?.poster_url || null);
+
       setLoading(false);
     }
     checkAuth();
@@ -98,7 +108,11 @@ export default function Profile() {
     await supabase.from('users').update({ avatar: emoji }).eq('id', userId);
   }
 
-  if (loading) return null;
+  if (loading) return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <Navbar onLogout={() => router.push('/')} />
+    </div>
+  );
 
   const TABS = isAdmin ? [...BASE_TABS, 'ADMIN'] : BASE_TABS;
 
@@ -107,6 +121,12 @@ export default function Profile() {
       <Navbar onLogout={() => router.push('/')} />
       <main className={styles.main}>
         <div className={styles.hero}>
+
+          {/* blurred banner from first favorite poster */}
+          {bannerUrl && (
+            <img src={bannerUrl} alt="" className={styles.heroBannerImg} aria-hidden="true" />
+          )}
+          <div className={styles.heroBannerGradient} />
 
           {/* avatar with click-to-change */}
           <div className={styles.avatarArea}>

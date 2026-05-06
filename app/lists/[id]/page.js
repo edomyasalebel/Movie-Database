@@ -20,7 +20,7 @@ export default function ListDetail({ params }) {
     async function fetchList() {
       const { data, error } = await supabase
         .from('lists')
-        .select('id, title, description, is_public, created_at, users(display_name, username), list_items(position, movies(id, title, release_year, poster_url, average_rating))')
+        .select('id, title, description, is_public, created_at, users(display_name, username), list_items(position, movies(id, title, release_year, poster_url, average_rating, type))')
         .eq('id', id)
         .single();
 

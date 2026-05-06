@@ -39,40 +39,74 @@
 
 /* ── hero ── */
 .hero {
-  padding: 48px 48px 0;
+  position: relative;
+  padding: 56px 48px 0;
   display: flex;
   align-items: flex-end;
   gap: 28px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(160deg, var(--surface2) 0%, transparent 70%);
+  overflow: hidden;
+  min-height: 220px;
 }
 
-.avatarArea { margin-bottom: 28px; flex-shrink: 0; position: relative; }
+/* blurred banner image */
+.heroBannerImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(22px) brightness(0.22) saturate(0.7);
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+/* gradient that keeps text readable regardless of banner image */
+.heroBannerGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,14,13,0.55) 0%,
+    rgba(15,14,13,0.75) 60%,
+    var(--bg) 100%
+  );
+  pointer-events: none;
+}
+
+/* everything inside hero must sit above the banner */
+.avatarArea,
+.meta { position: relative; z-index: 1; }
+
+.avatarArea { margin-bottom: 28px; flex-shrink: 0; }
 
 .avatarWrap {
-  width: 100px; height: 100px;
+  width: 84px; height: 84px;
   border-radius: 50%;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 0 5px rgba(212,175,55,0.08), 0 12px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 4px rgba(232,169,48,0.12), 0 0 24px rgba(232,169,48,0.18), 0 12px 32px rgba(0,0,0,0.6);
   background: var(--surface3);
   display: flex; align-items: center; justify-content: center;
   position: relative;
   cursor: pointer;
   overflow: hidden;
   padding: 0;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.avatarWrap:hover { border-color: var(--cream); }
+.avatarWrap:hover {
+  border-color: var(--cream);
+  box-shadow: 0 0 0 4px rgba(232,169,48,0.08), 0 12px 32px rgba(0,0,0,0.6);
+}
 .avatarWrap:hover .avatarEdit { opacity: 1; }
 
-.avatarEmoji { font-size: 42px; line-height: 1; }
+.avatarEmoji { font-size: 36px; line-height: 1; }
 
 .avatarEdit {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.55);
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; color: var(--cream);
+  font-size: 16px; color: var(--cream);
   opacity: 0;
   transition: opacity 0.2s;
   border-radius: 50%;
@@ -207,21 +241,30 @@
 /* stats */
 .stats {
   display: flex;
-  gap: 0;
-  margin-top: 24px;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .stat {
-  text-align: left;
-  padding-right: 28px;
-  margin-right: 28px;
-  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 72px;
+  transition: border-color 0.15s, background 0.15s;
 }
-.stat:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.stat:hover {
+  border-color: var(--border2);
+  background: rgba(255,255,255,0.06);
+}
 
 .statVal {
   font-family: var(--font-display);
-  font-size: 26px; font-weight: 400;
+  font-size: 24px; font-weight: 400;
   color: var(--cream); line-height: 1;
 }
 
@@ -229,6 +272,7 @@
   font-size: 10px; color: var(--muted);
   text-transform: uppercase; letter-spacing: 1px;
   margin-top: 5px;
+  white-space: nowrap;
 }
 
 /* ── tabs ── */
@@ -254,11 +298,20 @@
 .tab:hover { color: var(--cream); }
 .tab.active { color: var(--cream); font-weight: 500; border-bottom-color: var(--gold); }
 
-.adminTab { color: #c0392b !important; letter-spacing: 1px; font-size: 11px; font-weight: 600; }
-.adminTab:hover { color: #e74c3c !important; }
-.adminTab.active { color: #e74c3c !important; border-bottom-color: #c0392b; }
+.adminTab { color: var(--gold) !important; letter-spacing: 1px; font-size: 11px; font-weight: 600; opacity: 0.75; }
+.adminTab:hover { opacity: 1; }
+.adminTab.active { opacity: 1; border-bottom-color: var(--gold); }
 
 /* ── body ── */
 .body { padding: 36px 48px 72px; max-width: 1200px; }
 
 .empty { font-size: 14px; color: var(--muted); padding: 20px 0; }
+
+@media (max-width: 768px) {
+  .hero { padding: 80px 16px 0; flex-direction: column; gap: 16px; }
+  .displayName { font-size: 26px; }
+  .stats { gap: 6px; }
+  .stat { padding: 8px 12px; min-width: 60px; }
+  .tabs { padding: 0 16px; gap: 0; }
+  .body { padding: 24px 16px 60px; }
+}

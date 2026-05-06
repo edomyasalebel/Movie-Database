@@ -242,3 +242,11 @@
   margin-bottom: 8px;
   font-weight: 300;
 }
+
+@media (max-width: 768px) {
+  .container { padding: 70px 16px 40px; }
+  .filters { flex-wrap: wrap; gap: 8px; padding: 12px 0; }
+  .genres { gap: 6px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; }
+  .heading { font-size: 24px; }
+}

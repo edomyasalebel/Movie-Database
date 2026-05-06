@@ -11,9 +11,12 @@
 .card {
   background: var(--surface2);
   border: 1px solid var(--border);
+  border-top: 2px solid var(--gold-dim);
   border-radius: 14px;
   padding: 20px;
+  transition: border-color 0.2s;
 }
+.card:hover { border-color: var(--border2); border-top-color: var(--gold); }
 
 .cardTitle {
   font-size: 11px;
@@ -21,6 +24,7 @@
   letter-spacing: 1px;
   color: var(--muted);
   margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .statRow {

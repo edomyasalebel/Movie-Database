@@ -282,3 +282,15 @@
 .topRatedRow > * + * {
   border-left: 1px solid var(--border);
 }
+
+/* ── responsive ── */
+@media (max-width: 768px) {
+  .hero { height: 420px; }
+  .heroInfo { left: 20px; bottom: 36px; max-width: calc(100% - 40px); }
+  .heroTitle { font-size: 32px; }
+  .heroDesc { font-size: 13px; display: none; }
+  .heroSearch { padding: 0 16px; margin-top: -36px; }
+  .divider { margin: 0 16px; }
+  .topRatedRow { flex-direction: column; }
+  .topRatedRow > * + * { border-left: none; border-top: 1px solid var(--border); }
+}

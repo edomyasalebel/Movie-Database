@@ -39,7 +39,7 @@ export default function ListsGrid() {
     if (!session) return;
     const { data } = await supabase
       .from('lists')
-      .select('id, title, description, created_at, list_items(position, movies(id, title, release_year, poster_url, average_rating))')
+      .select('id, title, description, created_at, list_items(position, movies(id, title, release_year, poster_url, average_rating, type))')
       .eq('user_id', session.user.id)
       .order('created_at', { ascending: false });
 

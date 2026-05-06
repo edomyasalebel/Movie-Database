@@ -19,7 +19,7 @@ export default function WatchlistGrid() {
       // we JOIN movies to get title, poster_url etc. in one query
       const { data, error } = await supabase
         .from('watchlist')
-        .select('movie_id, movies(id, title, release_year, poster_url, average_rating)')
+        .select('movie_id, movies(id, title, release_year, poster_url, average_rating, type)')
         .eq('user_id', session.user.id);
 
       if (error) {
@@ -34,6 +34,7 @@ export default function WatchlistGrid() {
         release_year:   item.movies.release_year,
         poster_url:     item.movies.poster_url,
         average_rating: item.movies.average_rating,
+        type:           item.movies.type,
       }));
 
       setMovies(transformed);
@@ -47,7 +48,7 @@ export default function WatchlistGrid() {
       <h3 className={styles.title}>Watchlist</h3>
       {movies.length === 0 ? (
         // show a message if the watchlist is empty
-        <p className={styles.empty}>No movies in your watchlist yet.</p>
+        <p className={styles.empty}>No titles in your watchlist yet.</p>
       ) : (
         <div className={styles.grid}>
           {movies.map((movie) => (
